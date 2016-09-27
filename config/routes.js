@@ -33,7 +33,9 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
+//    view: 'homepage'
+    controller: 'IdentificacionController',
+    action: 'index'
   }
 
   /***************************************************************************
