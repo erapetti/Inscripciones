@@ -7,6 +7,11 @@ function mensaje(t) {
   }
 }
 
+// document ready
+$(document).ready(function() {
+  mensaje(typeof textoMensaje !== 'undefined' ? textoMensaje : '');
+});
+
 /*************************
  **  PASO 1
  *************************/
@@ -25,12 +30,10 @@ function validate_paso1() {
     return 0;
   }
   mensaje('');
-  alert($('#perdocid').val());
-  alert($('#perdocid-adulto').val());
   return 1;
 };
 
-$("#btn-paso1").click(function(e){
+$("div#paso1 #btn-paso1").click(function(e){
   if (!validate_paso1()) {
     e.preventDefault();
   }
@@ -40,6 +43,14 @@ $("#btn-paso1").click(function(e){
 $("#dd-pais a").click(function() {
   $('#pais').val( $(this).attr('data-value') );
   $('#lbl-pais').text( $(this).text());
+  // cambio el tipo de documento dependiendo del país seleccionado:
+  if ($('#pais').val() === "UY") {
+    $('#doccod').val("CI");
+    $('#lbl-doccod').text( "Cédula de Identidad" );
+  } else {
+    $('#doccod').val("PSP");
+    $('#lbl-doccod').text( "Pasaporte" );
+  }
 });
 
 $("#dd-doccod a").click(function() {
@@ -51,6 +62,14 @@ $("#dd-doccod a").click(function() {
 $("#dd-pais-adulto a").click(function() {
   $('#pais-adulto').val( $(this).attr('data-value') );
   $('#lbl-pais-adulto').text( $(this).text());
+  // cambio el tipo de documento dependiendo del país seleccionado:
+  if ($('#pais-adulto').val() === "UY") {
+    $('#doccod-adulto').val("CI");
+    $('#lbl-doccod-adulto').text( "Cédula de Identidad" );
+  } else {
+    $('#doccod-adulto').val("PSP");
+    $('#lbl-doccod-adulto').text( "Pasaporte" );
+  }
 });
 
 $("#dd-doccod-adulto a").click(function() {
@@ -58,7 +77,34 @@ $("#dd-doccod-adulto a").click(function() {
   $('#lbl-doccod-adulto').text( $(this).text());
 });
 
-// document ready
-$(document).ready(function() {
-  mensaje('');
+
+
+/*************************
+ **  PASO 2
+ *************************/
+
+ $("div#paso2 #btn-paso1").click(function(e){
+   history.go(-1);
+   e.preventDefault();
+ });
+
+ $("div#paso2 #btn-paso3").click(function(e){
+   if (!validate_paso2()) {
+     e.preventDefault();
+   }
+ });
+
+
+ /*************************
+  **  PASO 3
+  *************************/
+
+
+// datepicker:
+$('div#date').datepicker({
+    format: "dd/mm/yyyy",
+    todayBtn: "linked",
+    language: "es",
+    daysOfWeekDisabled: "0",
+    todayHighlight: true
 });

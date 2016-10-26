@@ -1,0 +1,53 @@
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      Identificación del alumno
+    </div>
+    <div class="panel-body">
+
+      <div class="form-group">
+        <label for="pais" class="col-sm-2 control-label">País:</label>
+        <div class="dropdown col-sm-2" id="dd-pais">
+          <button class="btn btn-default dropdown-toggle" type="button" id="btn-pais" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <input type="hidden" name="pais" value="UY" id="pais">
+            <span id="lbl-pais">Uruguay</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="btn-pais">
+            <li><a data-value="AR">Argentina</a></li>
+            <li><a data-value="BR">Brasil</a></li>
+            <li><a data-value="PY">Paraguay</a></li>
+            <li><a data-value="UY">Uruguay</a></li>
+            <li><a data-value="VZ">Venezuela</a></li>
+            <li role="separator" class="divider"></li>
+            <% paises.forEach(function(info) { -%>
+              <li><a data-value="<%= info.PaisCod %>"><%= info.PaisNom %></a></li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="doccod" class="col-sm-2 control-label">Tipo de documento:</label>
+        <div class="dropdown col-sm-2" id="dd-doccod">
+          <button class="btn btn-default dropdown-toggle" type="button" id="btn-doccod" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <input type="hidden" name="doccod" value="CI" id="doccod">
+            <span id="lbl-doccod">Cédula de identidad</span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="btn-doccod">
+            <li><a data-value="CI">Cédula de identidad</a></li>
+            <li><a data-value="PSP">Pasaporte</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="perdocid" class="col-sm-2 control-label">Número de documento:</label>
+        <div class="col-sm-2">
+          <input type="text" class="form-control" id="perdocid" name="perdocid" placeholder="12345678">
+        </div>
+        <label style="font-weight:normal;padding-top:0.5em" aria-label-for="perdocid">Sólo los números y las letras del número de documento</label>
+      </div>
+
+    </div>
+  </div>

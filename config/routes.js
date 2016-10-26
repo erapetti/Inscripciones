@@ -34,9 +34,13 @@ module.exports.routes = {
 
   '/': {
 //    view: 'homepage'
-    controller: 'IdentificacionController',
-    action: 'index'
-  }
+    controller: 'FormController',
+    action: 'paso1'
+  },
+  '/paso2': {
+    controller: 'FormController',
+    action: 'paso2'
+  },
 
   /***************************************************************************
   *                                                                          *

@@ -1,3 +1,11 @@
 div#paso1 {margin:2em auto;width:90%;}
 div#paso1 div.panel-heading {font-weight:bold;}
-div#paso1 #btn-paso1 {margin-bottom:1em;}
+div#paso1 #btn-paso1 {margin-bottom:1em;font-weight:bold;}
+
+div#paso2 {margin:2em auto;width:90%;}
+div#paso2 div.panel-heading {font-weight:bold;}
+div#paso2 #btn-paso1 {margin-bottom:1em;font-weight:bold;}
+div#paso2 #btn-paso3 {margin-bottom:1em;font-weight:bold;}
+
+div#paso2 .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
+div#paso2 img.media-object {sborder-radius:9px;max-width:50vw;}
