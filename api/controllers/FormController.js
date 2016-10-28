@@ -39,7 +39,12 @@ module.exports = {
 			}
 
 			var inicioCurso = new Date("2016-03-01T03:00:00.000Z");
-			Inscripciones.find({perid:persona.perid,EstadosInscriId:1,FechaInicioCurso:inicioCurso}).populate('PlanId').exec(function(err,inscripciones) {
+			Inscripciones.find({PerId:persona.perid,EstadosInscriId:1,FechaInicioCurso:inicioCurso})
+									 .sort('InscripcionId DESC')
+									 .limit(1)
+									 .populate('DependId')
+									 .populate('PlanId')
+									 .exec(function(err,inscripciones) {
 				if (err) {
 					return res.serverError(err);
 				}

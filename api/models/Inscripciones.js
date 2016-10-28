@@ -16,14 +16,14 @@ module.exports = {
   identity: 'Inscripciones',
   attributes: {
           InscripcionId: {
-                  type: 'integer',
-                  primaryKey: true
+            type: 'integer',
+            primaryKey: true
           },
           EstadosInscriId: 'integer',
-          DependId: 'integer',
+          DependId: { model: 'Dependencias' },
           PerId: {
-              type: 'integer',
-              key: true
+            type: 'integer',
+            key: true
           },
           PlanId: { model: 'Planes' },
           TipoModalidadId: 'integer',

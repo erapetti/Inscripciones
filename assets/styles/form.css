@@ -8,4 +8,20 @@ div#paso2 #btn-paso1 {margin-bottom:1em;font-weight:bold;}
 div#paso2 #btn-paso3 {margin-bottom:1em;font-weight:bold;}
 
 div#paso2 .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
-div#paso2 img.media-object {sborder-radius:9px;max-width:50vw;}
+div#paso2 img.media-object {border-radius:9px;max-width:50vw;}
+
+@font-face {font-family: "JaapokkiRegular";
+    src: url("/styles/fonts/JaapokkiRegular.eot");
+    src: url("/styles/fonts/JaapokkiRegular_ot.eot") format("embedded-opentype"),
+    url("/styles/fonts/JaapokkiRegular.woff2") format("woff2"),
+    url("/styles/fonts/JaapokkiRegular.woff") format("woff"),
+    url("/styles/fonts/JaapokkiRegular.ttf") format("truetype"),
+    url("/styles/fonts/JaapokkiRegular.svg") format("svg");
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(/styles/fonts/LatoRegular.ttf) format('truetype');
+}
+body {font-family: Lato;font-size:16pt;}
