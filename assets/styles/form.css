@@ -44,10 +44,11 @@ div#inicio .t-cover__arrow {position: absolute;z-index: 9;bottom: 40px;right: 0;
 div#inicio .t-cover__arrow-wrapper {display: inline-block;-webkit-transition: all ease-in-out 0.2s;-moz-transition: all ease-in-out 0.2s;-o-transition: all ease-in-out 0.2s;transition: all ease-in-out 0.2s;cursor: pointer;}
 div#inicio .t-cover__arrow-wrapper_animated {animation: t-arrow-bottom 1.7s infinite ease;}
 div#inicio .t-cover__arrow-svg {fill: #BA143B;}
+div#inicio .t_linetop {border-top: 4px solid #BA143B;padding-left: 0;width: 100%;margin-top: 1px;padding-bottom:1em;}
 div#inicio .seccion {background-color: #eeeeee;padding:4em;font-size:16pt;}
-div#inicio .seccion h2 {margin-top:0;}
+div#inicio .seccion h2 {margin-top:0;font-family: 'JaapokkiRegular',sans-serif;color:#BA143B;}
 div#inicio .seccion a {font-size:14pt;}
-div#inicio .seccion div.row {margin-top:3em;margin-bottom:1em;}
+div#inicio .seccion div.row {padding-top:3em;padding-bottom:1em;}
 
 @keyframes t-arrow-bottom {
 	0% {

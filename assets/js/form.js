@@ -18,9 +18,7 @@ $(document).ready(function() {
 *************************/
 
 $('#arrow').click(function() {
-  alert($('#s1').scrollTop());
-  //$('html body').scrollTop($('#s1').scrollTop());
-  $("html, body").animate({ scrollTop: $("#arrow").scrollTop() }, 1000);
+  $("html, body").animate({ scrollTop: $("#s1").offset().top }, 1000);
 });
 
 
