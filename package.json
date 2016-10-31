@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "bootstrap-datepicker": "^1.6.4",
     "connect-memcached": "~0.2.0",
     "ejs": "2.3.4",
     "grunt": "1.0.1",

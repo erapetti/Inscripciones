@@ -12,6 +12,18 @@ $(document).ready(function() {
   mensaje(typeof textoMensaje !== 'undefined' ? textoMensaje : '');
 });
 
+
+/*************************
+**  INICIO
+*************************/
+
+$('#arrow').click(function() {
+  alert($('#s1').scrollTop());
+  //$('html body').scrollTop($('#s1').scrollTop());
+  $("html, body").animate({ scrollTop: $("#arrow").scrollTop() }, 1000);
+});
+
+
 /*************************
  **  PASO 1
  *************************/
