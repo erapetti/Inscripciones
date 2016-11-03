@@ -26,11 +26,10 @@ module.exports = {
             key: true
           },
           PlanId: { model: 'Planes' },
-          TipoModalidadId: 'integer',
-          CicloId: 'integer',
-          GradoId: 'integer',
-          OrientacionId: 'integer',
-          OpcionId: 'integer',
+          CicloId: { model: 'Ciclos' },
+          GradoId: { model: 'Grados' },
+          OrientacionId: { model: 'Orientaciones' },
+          OpcionId: { model: 'Opciones' },
           FechaInicioCurso: 'date',
           InscriTurno: 'string',
   }

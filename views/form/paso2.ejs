@@ -1,54 +1,62 @@
 <div id="paso2">
+  <div id="content">
 
-  <% if (typeof persona !== 'undefined') { %>
-    <h4><%= persona.pernombrecompleto %></h4>
-  <% } %>
+    <% if (typeof persona !== 'undefined') { %>
+      <h4><%= persona.pernombrecompleto %></h4>
+    <% } %>
 
-  <form method="post" class="form-horizontal" id="frm-paso1" action='paso3'>
+    <form method="post" class="form-horizontal" id="frm-paso1" action='paso3'>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">Última inscripción a liceo:</div>
-      <div class="panel-body">
+      <div class="panel panel-default">
+        <div class="panel-heading">Liceo asignado:</div>
+        <div class="panel-body">
 
 
-      <% if (typeof inscripciones !== 'undefined') { %>
-        <% inscripciones.forEach(function(inscripcion){ %>
+        <% if (typeof inscripciones !== 'undefined') { %>
+          <% inscripciones.forEach(function(inscripcion){ %>
 
-          <div class="media">
-            <div class="media-left">
-                <div class="passepartout">
-                  <img class="media-object" src="http://monkey.ces.edu.uy/imagenes/liceos/liceo03.jpg" alt="<%= inscripcion.DependId %>">
-                </div>
+            <div class="media">
+              <div class="media-left">
+                  <div class="passepartout">
+                    <img class="media-object" src="http://servicios.ces.edu.uy/monkey/imagenes/liceos/liceo03.jpg" alt="<%= inscripcion.DependId.DependDesc %>">
+                  </div>
+              </div>
+              <div class="media-body">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <h4 class="media-heading"><b>Liceo</b>:
+                      <div>
+                        <%= inscripcion.DependId.DependDesc %>
+                        <% if (inscripcion.DependId.DependNom) {%><br><%= inscripcion.DependId.DependNom %><% } %>
+                      </div>
+                    </h4>
+                  </li>
+                </ul>
+                <p style="text-align:center">Detalle de la inscripción:</p>
+                <ul class="list-group">
+                  <li class="list-group-item"><b>Plan:</b> <%= inscripcion.PlanId.PlanNombre %></li>
+                  <li class="list-group-item"><b>Ciclo:</b> <%= inscripcion.CicloId.CicloDesc %></li>
+                  <li class="list-group-item"><b>Grado:</b> <%= inscripcion.GradoId.GradoDesc %></li>
+                  <% if (inscripcion.OrientacionId.OrientacionId!=1) {%><li class="list-group-item"><b>Orientacion:</b> <%= inscripcion.OrientacionId.OrientacionDesc %></li><% } %>
+                  <% if (inscripcion.OpcionId.OpcionId!=1) {%><li class="list-group-item"><b>Opcion:</b> <%= inscripcion.OpcionId.OpcionDesc %></li><% } %>
+                  <li class="list-group-item"><b>Turno:</b> <%= inscripcion.TurnoDesc %></li>
+                </ul>
+              </div>
             </div>
-            <div class="media-body">
-              <ul class="list-group">
-                <li class="list-group-item"><h4 class="media-heading">Liceo: <%= inscripcion.DependId.DependDesc %><% if (inscripcion.DependId.DependNom) {%> <br><%= inscripcion.DependId.DependNom %><% } %></h4></li>
-              </ul>
-              <p style="text-align:center">Detalle de la inscripción:</p>
-              <ul class="list-group">
-                <li class="list-group-item"><b>Plan:</b> <%= inscripcion.PlanId.PlanNombre %></li>
-                <li class="list-group-item"><b>TipoModalidadId:</b> <%= inscripcion.TipoModalidadId %></li>
-                <li class="list-group-item"><b>CicloId:</b> <%= inscripcion.CicloId %></li>
-                <li class="list-group-item"><b>GradoId:</b> <%= inscripcion.GradoId %></li>
-                <li class="list-group-item"><b>OrientacionId:</b> <%= inscripcion.OrientacionId %></li>
-                <li class="list-group-item"><b>OpcionId:</b> <%= inscripcion.OpcionId %></li>
-                <li class="list-group-item"><b>InscriTurno:</b> <%= inscripcion.InscriTurno %></li>
-              </ul>
-            </div>
-          </div>
-        <% }) %>
-      <% } %>
+          <% }) %>
+        <% } %>
 
+        </div>
       </div>
-    </div>
 
-    <button type="submit" class="btn btn-primary" id="btn-paso1" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
-    <button type="submit" class="btn btn-primary" id="btn-paso3" name="paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+      <button type="submit" class="btn btn-primary" id="btn-paso1" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+      <button type="submit" class="btn btn-primary" id="btn-paso3" name="paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
 
-    <div class="alert alert-danger" id="mensaje" style="display:none"></div>
-    <script type="text/javascript">
-      textoMensaje='<% if (typeof mensaje!=='undefined') { %><%= mensaje %><% } %>'
-    </script>
+      <div class="alert alert-danger" id="mensaje" style="display:none"></div>
+      <script type="text/javascript">
+        textoMensaje='<% if (typeof mensaje!=='undefined') { %><%= mensaje %><% } %>'
+      </script>
 
-  </form>
+    </form>
+  </div>
 </div>

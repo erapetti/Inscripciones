@@ -7,6 +7,10 @@
 
 module.exports = {
 
+  // variables del modelo:
+	turnos: {1:'Matutino', 2:'Tarde', 3:'Vespertino', 4:'Nocturno', D:'Diurno', N:'Nocturno'},
+
+	// métodos del modelo:
 	paso1: function (req, res) {
 
 		Paises.find({PaisVer:'S'}).exec(function(err, paises){
@@ -44,6 +48,10 @@ module.exports = {
 									 .limit(1)
 									 .populate('DependId')
 									 .populate('PlanId')
+									 .populate('CicloId')
+									 .populate('GradoId')
+									 .populate('OrientacionId')
+									 .populate('OpcionId')
 									 .exec(function(err,inscripciones) {
 				if (err) {
 					return res.serverError(err);
@@ -53,6 +61,7 @@ module.exports = {
 					console.log("no hay inscripcion");
 					return res.view({mensaje:"No se encuentra una inscripción registrada para el documento dado"});
 				}
+				inscripciones.TurnoDesc = FormController.turnos[inscripciones.InscriTurno];
 				return res.view({persona:persona,inscripciones:inscripciones});
 			});
 		});
