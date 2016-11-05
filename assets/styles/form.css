@@ -2,7 +2,7 @@ div#paso1 {margin:0;padding:0;width:100%;height:100%;min-height:100vh;background
 div#paso1 #content {padding:2em 0;margin:0 auto;width:90%;}
 div#paso1 h2 {font-family:'JaapokkiRegular',sans-serif;letter-spacing:2px;margin:0 0 1em 0;color:#BA143B;}
 div#paso1 div.panel-heading {font-weight:bold;}
-div#paso2 .btn-primary {margin-bottom:1em;font-weight:bold;background-color: #507a78;border-color: #5f5f60;}
+div#paso1 .btn-primary {margin-bottom:1em;font-weight:bold;background-color: #507a78;border-color: #5f5f60;}
 
 div#paso2 {margin:0;padding:0;width:100%;height:100%;min-height:100vh;background-color:#eeeeee;}
 div#paso2 #content {padding:2em 0;margin:0 auto;width:90%;}

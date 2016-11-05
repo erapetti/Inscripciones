@@ -7,9 +7,6 @@
 
 module.exports = {
 
-  // variables del modelo:
-	turnos: {1:'Matutino', 2:'Tarde', 3:'Vespertino', 4:'Nocturno', D:'Diurno', N:'Nocturno'},
-
 	// métodos del modelo:
 	paso1: function (req, res) {
 
@@ -26,6 +23,8 @@ module.exports = {
 		var pais = req.param('pais');
 		var doccod = req.param('doccod');
 		var perdocid = req.param('perdocid');
+
+		turnos={1:'Matutino', 2:'Tarde', 3:'Vespertino', 4:'Nocturno', D:'Diurno', N:'Nocturno'};
 
 		// valido los parámetros
 		if (!pais.match('^[A-Z][A-Z]$') && !doccod.match('^[A-Z]+$') && !perdocid.match('^[a-zA-Z0-9 -]+$')) {
@@ -61,7 +60,7 @@ module.exports = {
 					console.log("no hay inscripcion");
 					return res.view({mensaje:"No se encuentra una inscripción registrada para el documento dado"});
 				}
-				inscripciones.TurnoDesc = FormController.turnos[inscripciones.InscriTurno];
+				inscripciones.TurnoDesc = turnos[inscripciones.InscriTurno];
 				return res.view({persona:persona,inscripciones:inscripciones});
 			});
 		});
