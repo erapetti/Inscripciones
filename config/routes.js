@@ -35,15 +35,6 @@ module.exports.routes = {
   '/': {
     view: 'inicio'
   },
-  '/paso1': {
-//    view: 'homepage'
-    controller: 'FormController',
-    action: 'paso1'
-  },
-  '/paso2': {
-    controller: 'FormController',
-    action: 'paso2'
-  },
 
   /***************************************************************************
   *                                                                          *

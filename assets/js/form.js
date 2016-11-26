@@ -27,16 +27,23 @@ $('#arrow').click(function() {
  *************************/
 
 function validate_paso1() {
+  $('#perdocid').removeClass('red');
+  $('#perdocid-adulto').removeClass('red');
+  $('#telefono-adulto').removeClass('red');
+
   if ($('#perdocid').val() === "") {
     mensaje("Debe ingresar el número de documento del alumno");
+    $('#perdocid').addClass('red');
     return 0;
   }
   if ($('#perdocid-adulto').val() === "") {
     mensaje("Debe ingresar el número de documento del adulto");
+    $('#perdocid-adulto').addClass('red');
     return 0;
   }
   if ($('#telefono-adulto').val() === "") {
     mensaje("Debe ingresar el número de teléfono del adulto");
+    $('#telefono-adulto').addClass('red');
     return 0;
   }
   mensaje('');
@@ -104,11 +111,30 @@ $("#dd-doccod-adulto a").click(function() {
    }
  });
 
+ $('document').ready(function() {
+   var img = new Image();
+   img.onload = function() {
+     $('#img-liceo').attr('src', img.src);
+   };
+   img.onerror = function() {
+     $('#img-liceo').attr('src', '/images/template.jpg');
+   };
+   img.src = "/images/"+ $('#img-liceo').attr('data') +".jpg";
+ });
 
  /*************************
   **  PASO 3
   *************************/
+  $("div#paso3 #btn-paso2").click(function(e){
+    history.go(-1);
+    e.preventDefault();
+  });
 
+  $("div#paso3 #btn-paso4").click(function(e){
+    if (!validate_paso3()) {
+      e.preventDefault();
+    }
+  });
 
 // datepicker:
 $('div#date').datepicker({

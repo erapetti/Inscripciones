@@ -1,11 +1,11 @@
-<div id="paso2">
+<div id="paso2" class="paso">
   <div id="content">
 
     <% if (typeof persona !== 'undefined') { %>
       <h4><%= persona.pernombrecompleto %></h4>
     <% } %>
 
-    <form method="post" class="form-horizontal" id="frm-paso1" action='paso3'>
+    <form method="post" class="form-horizontal" id="frm-paso2" action='paso3'>
 
       <div class="panel panel-default">
         <div class="panel-heading">Liceo asignado:</div>
@@ -18,7 +18,7 @@
             <div class="media">
               <div class="media-left">
                   <div class="passepartout">
-                    <img class="media-object" src="http://servicios.ces.edu.uy/monkey/imagenes/liceos/liceo03.jpg" alt="<%= inscripcion.DependId.DependDesc %>">
+                    <img class="media-object" id="img-liceo" data="<%= inscripcion.DependId.DependId %>" alt="<%= inscripcion.DependId.DependDesc %>" height="265">
                   </div>
               </div>
               <div class="media-body">
@@ -30,6 +30,10 @@
                         <% if (inscripcion.DependId.DependNom) {%><br><%= inscripcion.DependId.DependNom %><% } %>
                       </div>
                     </h4>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Dirección:</b>
+                    <%= direccion.LugarDireccion %>, <%= direccion.LocNombre %>, <%= direccion.DeptoNombre %>
                   </li>
                 </ul>
                 <p style="text-align:center">Detalle de la inscripción:</p>
