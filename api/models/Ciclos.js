@@ -20,5 +20,5 @@ module.exports = {
           },
           CicloDesc: 'string',
           CicloAbrev: 'string',
-  }
+  },
 };

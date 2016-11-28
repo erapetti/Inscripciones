@@ -28,6 +28,9 @@ module.exports = {
 		turnos={'1':'Matutino', '2':'Tarde', '3':'Vespertino', '4':'Nocturno', 'D':'Diurno', 'N':'Nocturno'};
 
 		// valido los parámetros
+		if (!pais || !doccod || !perdocid) {
+				return res.serverError(new Error("parámetros incorrectos"));
+		}
 		if (!pais.match('^[A-Z][A-Z]$') && !doccod.match('^[A-Z]+$') && !perdocid.match('^[a-zA-Z0-9 -]+$')) {
 			return res.serverError(new Error("documento de alumno inválido"));
 		}
@@ -39,7 +42,7 @@ module.exports = {
 			}
 
 			if (typeof persona === 'undefined') {
-				return res.view({mensaje:"No se encuentra una persona registrada con el documento dado"});
+				return res.view({mensaje:"No se encuentra una persona registrada con el documento dado.<br>Si ingresó correctamente el número de documento debe consultar dónde inscribirse en <a href='http://ces.edu.uy/index.php/reguladora-estudiantil'>el sitio web de CES</a>"});
 			}
 
 			var inicioCurso = new Date("2016-03-01T03:00:00.000Z");

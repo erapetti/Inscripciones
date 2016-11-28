@@ -2,7 +2,7 @@ function mensaje(t) {
   if (t==="") {
     $('#mensaje').hide();
   } else {
-    $('#mensaje').text(t);
+    $('#mensaje').html(t);
     $('#mensaje').show();
   }
 }

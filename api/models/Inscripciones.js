@@ -32,5 +32,5 @@ module.exports = {
           OpcionId: { model: 'Opciones' },
           FechaInicioCurso: 'date',
           InscriTurno: 'string',
-  }
+  },
 };

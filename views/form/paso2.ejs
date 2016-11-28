@@ -5,6 +5,7 @@
       <h4><%= persona.pernombrecompleto %></h4>
     <% } %>
 
+    <% if (typeof inscripciones !== 'undefined') { %>
     <form method="post" class="form-horizontal" id="frm-paso2" action='paso3'>
 
       <div class="panel panel-default">
@@ -12,7 +13,6 @@
         <div class="panel-body">
 
 
-        <% if (typeof inscripciones !== 'undefined') { %>
           <% inscripciones.forEach(function(inscripcion){ %>
 
             <div class="media">
@@ -48,19 +48,19 @@
               </div>
             </div>
           <% }) %>
-        <% } %>
 
         </div>
       </div>
 
       <button type="submit" class="btn btn-primary" id="btn-paso1" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
       <button type="submit" class="btn btn-primary" id="btn-paso3" name="paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-
-      <div class="alert alert-danger" id="mensaje" style="display:none"></div>
-      <script type="text/javascript">
-        textoMensaje='<% if (typeof mensaje!=='undefined') { %><%= mensaje %><% } %>'
-      </script>
-
     </form>
+    <% } %>
+
+    <div class="alert alert-danger" id="mensaje" style="display:none"></div>
+    <script type="text/javascript">
+    textoMensaje="<% if (typeof mensaje!=='undefined') { %><%- mensaje %><% } %>";
+    </script>
+
   </div>
 </div>
