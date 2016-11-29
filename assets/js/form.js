@@ -10,6 +10,41 @@ function mensaje(t) {
 // document ready
 $(document).ready(function() {
   mensaje(typeof textoMensaje !== 'undefined' ? textoMensaje : '');
+
+  // inicialización de los dropdown-menu
+  $("ul.dropdown-menu").each(function(index,obj){
+    var campo = $(this).attr('dd');
+    var val = $('#dd-'+campo).val();
+    if (typeof val !== 'undefined' && val!=="") {
+      var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").text();
+      // actualizo etiqueta del botón
+      $('#btn-dd-'+campo).html( texto + ' <span class="caret"></span>');
+    }
+  });
+  // función para actualizar los dropdown-menu cuando el usuario selecciona una opción
+  $(document).on("click","ul.dropdown-menu li a",function(event) {
+    event.preventDefault();
+    // actualizo etiqueta del botón
+    $('#btn-dd-'+$(this).attr('dd')).html( $(this).text() + ' <span class="caret"></span>');
+    // actualizo input
+    $('#dd-'+$(this).attr('dd')).val( $(this).attr('data') );
+    $('#dd-'+$(this).attr('dd')).change();
+  });
+  // carga de las imágenes de los liceos
+  $('img.img-liceo').each(function() {
+   var img = new Image();
+   var obj = $(this);
+   img.onload = function() {
+     obj.attr('src', img.src);
+   };
+   img.onerror = function() {
+     obj.attr('src', '/images/template.jpg');
+   };
+   img.src = "/images/"+ obj.attr('data') +".jpg";
+   if (obj.attr('data') === 'undefined') {
+     console.log(obj);
+   }
+  });
 });
 
 
@@ -94,47 +129,55 @@ $("#dd-doccod-adulto a").click(function() {
   $('#lbl-doccod-adulto').text( $(this).text());
 });
 
-
+$("#btn-back").click(function(e){
+  e.preventDefault();
+  document.location.replace( $(this).attr("name") );
+});
 
 /*************************
  **  PASO 2
  *************************/
+if(0===1){
+$('#img-liceo').ready(function() {
+ var img = new Image();
+ img.onload = function() {
+   $('#img-liceo').attr('src', img.src);
+ };
+ img.onerror = function() {
+   $('#img-liceo').attr('src', '/images/template.jpg');
+ };
+ img.src = "/images/"+ $('#img-liceo').attr('data') +".jpg";
+});
+}
+/*************************
+ **  PASO 3
+ *************************/
 
- $("div#paso2 #btn-paso1").click(function(e){
-   history.go(-1);
+$('#dd-departamento').change(function() {
+  // actualizo la etiqueta del botón
+  $('#btn-dd-localidad').html( "Seleccione una localidad" + ' <span class="caret"></span>');
+  // actualizo input
+  $('#dd-localidad').val("");
+  // obtengo las localidades del departamento seleccionado
+  $.getJSON("../localidades/conLiceo?DeptoId="+$(this).val(), function(data) {
+    $('#ul-dd-localidad').html(''); // borro las opciones que tenía
+    data.forEach(function(loc) {
+      $('#ul-dd-localidad').append('<li><a href="#" dd="localidad" data="'+loc.LocId+'">'+loc.LocNombre+'</a></li>');
+    });
+  });
+});
+
+/*************************
+ **  PASO 4
+ *************************/
+
+$("div#paso3 #btn-paso5").click(function(e){
+ if (!validate_paso4()) {
    e.preventDefault();
- });
+ }
+});
 
- $("div#paso2 #btn-paso3").click(function(e){
-   if (!validate_paso2()) {
-     e.preventDefault();
-   }
- });
 
- $('document').ready(function() {
-   var img = new Image();
-   img.onload = function() {
-     $('#img-liceo').attr('src', img.src);
-   };
-   img.onerror = function() {
-     $('#img-liceo').attr('src', '/images/template.jpg');
-   };
-   img.src = "/images/"+ $('#img-liceo').attr('data') +".jpg";
- });
-
- /*************************
-  **  PASO 3
-  *************************/
-  $("div#paso3 #btn-paso2").click(function(e){
-    history.go(-1);
-    e.preventDefault();
-  });
-
-  $("div#paso3 #btn-paso4").click(function(e){
-    if (!validate_paso3()) {
-      e.preventDefault();
-    }
-  });
 
 // datepicker:
 $('div#date').datepicker({

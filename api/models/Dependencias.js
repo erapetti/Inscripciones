@@ -43,7 +43,7 @@ module.exports = {
       if (result===null) {
         return new Error("No se encuentra la dependencia",undefined);
       }
-      return callback(undefined, (result===null ? undefined : result));
+      return callback(undefined, (result===null ? undefined : result[0]));
     });
   },
 

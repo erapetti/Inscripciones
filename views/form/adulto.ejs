@@ -44,7 +44,7 @@
     <div class="form-group">
       <label for="perdocid-adulto" class="col-sm-2 control-label">Número de documento:</label>
       <div class="col-sm-2">
-        <input type="text" class="form-control" id="perdocid-adulto" name="perdocid-adulto" placeholder="12345678">
+        <input type="text" class="form-control" id="perdocid-adulto" name="perdocid-adulto" placeholder="12345678"<% if (sesion.perdocid_adulto){ %> value="<%= sesion.perdocid_adulto %>"<% } %>>
       </div>
       <label style="font-weight:normal;padding-top:0.5em" aria-label-for="perdocid-adulto">Sólo los números y las letras del número de documento</label>
     </div>
@@ -52,7 +52,7 @@
     <div class="form-group">
       <label for="telefono-adulto" class="col-sm-2 control-label">Teléfono:</label>
       <div class="col-sm-2">
-        <input type="text" class="form-control" id="telefono-adulto" name="telefono-adulto" placeholder="099123456">
+        <input type="text" class="form-control" id="telefono-adulto" name="telefono-adulto" placeholder="099123456"<% if (sesion.telefono_adulto){ %> value="<%= sesion.telefono_adulto %>"<% } %>>
       </div>
     </div>
   </div>

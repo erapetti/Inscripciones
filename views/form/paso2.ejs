@@ -15,47 +15,54 @@
 
           <% inscripciones.forEach(function(inscripcion){ %>
 
-            <div class="media">
-              <div class="media-left">
-                  <div class="passepartout">
-                    <img class="media-object" id="img-liceo" data="<%= inscripcion.DependId.DependId %>" alt="<%= inscripcion.DependId.DependDesc %>" height="265">
-                  </div>
+              <div class="media">
+                <div class="media-left">
+                    <div class="passepartout">
+                      <img class="media-object img-liceo" data="<%= inscripcion.DependId.DependId %>" alt="<%= inscripcion.DependId.DependDesc %>" height="265">
+                    </div>
+                </div>
+                <div class="media-body">
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <h4 class="media-heading"><b>Liceo</b>:
+                        <div>
+                          <%= inscripcion.DependId.DependDesc %>
+                          <% if (inscripcion.DependId.DependNom) {%><br><%= inscripcion.DependId.DependNom %><% } %>
+                        </div>
+                      </h4>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Dirección:</b>
+                      <%= direccion.LugarDireccion %>, <%= direccion.LocNombre %>, <%= direccion.DeptoNombre %>
+                    </li>
+                  </ul>
+                  <p style="text-align:center">Detalle de la inscripción:</p>
+                  <ul class="list-group">
+                    <li class="list-group-item"><b>Plan:</b> <%= inscripcion.PlanId.PlanNombre %></li>
+                    <input type="hidden" name="planId" value="<%= inscripcion.PlanId.PlanId %>">
+                    <li class="list-group-item"><b>Ciclo:</b> <%= inscripcion.CicloId.CicloDesc %></li>
+                    <input type="hidden" name="cicloId" value="<%= inscripcion.CicloId.CicloId %>">
+                    <li class="list-group-item"><b>Grado:</b> <%= inscripcion.GradoId.GradoDesc %></li>
+                    <input type="hidden" name="gradoId" value="<%= inscripcion.GradoId.GradoId %>">
+                    <% if (inscripcion.OrientacionId.OrientacionId!=1) {%><li class="list-group-item"><b>Orientacion:</b> <%= inscripcion.OrientacionId.OrientacionDesc %></li><% } %>
+                    <input type="hidden" name="orientacionId" value="<%= inscripcion.OrientacionId.OrientacionId %>">
+                    <% if (inscripcion.OpcionId.OpcionId!=1) {%><li class="list-group-item"><b>Opcion:</b> <%= inscripcion.OpcionId.OpcionDesc %></li><% } %>
+                    <input type="hidden" name="opcionId" value="<%= inscripcion.OpcionId.OpcionId %>">
+                    <li class="list-group-item"><b>Turno:</b> <%= turnosDesc[inscripcion.InscriTurno] %></li>
+                    <input type="hidden" name="turnoId" value="<%= inscripcion.InscriTurno %>">
+                  </ul>
+                </div>
               </div>
-              <div class="media-body">
-                <ul class="list-group">
-                  <li class="list-group-item">
-                    <h4 class="media-heading"><b>Liceo</b>:
-                      <div>
-                        <%= inscripcion.DependId.DependDesc %>
-                        <% if (inscripcion.DependId.DependNom) {%><br><%= inscripcion.DependId.DependNom %><% } %>
-                      </div>
-                    </h4>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Dirección:</b>
-                    <%= direccion.LugarDireccion %>, <%= direccion.LocNombre %>, <%= direccion.DeptoNombre %>
-                  </li>
-                </ul>
-                <p style="text-align:center">Detalle de la inscripción:</p>
-                <ul class="list-group">
-                  <li class="list-group-item"><b>Plan:</b> <%= inscripcion.PlanId.PlanNombre %></li>
-                  <li class="list-group-item"><b>Ciclo:</b> <%= inscripcion.CicloId.CicloDesc %></li>
-                  <li class="list-group-item"><b>Grado:</b> <%= inscripcion.GradoId.GradoDesc %></li>
-                  <% if (inscripcion.OrientacionId.OrientacionId!=1) {%><li class="list-group-item"><b>Orientacion:</b> <%= inscripcion.OrientacionId.OrientacionDesc %></li><% } %>
-                  <% if (inscripcion.OpcionId.OpcionId!=1) {%><li class="list-group-item"><b>Opcion:</b> <%= inscripcion.OpcionId.OpcionDesc %></li><% } %>
-                  <li class="list-group-item"><b>Turno:</b> <%= inscripcion.TurnoDesc %></li>
-                </ul>
-              </div>
-            </div>
           <% }) %>
 
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary" id="btn-paso1" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
-      <button type="submit" class="btn btn-primary" id="btn-paso3" name="paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
-    </form>
     <% } %>
+
+      <button type="submit" class="btn btn-primary" id="btn-back" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+      <button type="submit" class="btn btn-primary" id="btn-paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+    </form>
 
     <div class="alert alert-danger" id="mensaje" style="display:none"></div>
     <script type="text/javascript">

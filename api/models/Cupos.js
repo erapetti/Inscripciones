@@ -8,12 +8,16 @@
 module.exports = {
 
   connection: 'Estudiantil',
-  autoCreatedAt: false,
-  autoUpdatedAt: false,
-  autoPK: false,
+//  autoCreatedAt: false,
+//  autoUpdatedAt: false,
+//  autoPK: false,
 //  migrate: 'safe',
   tableName: 'CUPOS',
   attributes: {
+    id: {
+      type: 'integer',
+      primaryKey: true,
+    },
     DependId: { model: 'Dependencias' },
     PlanId: { model: 'Planes' },
     TurnoId: 'string',
@@ -25,9 +29,9 @@ module.exports = {
     Grupos: 'integer',
     AlumnosPorGrupo: 'integer',
   },
-  saldos: function(DeptoId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso) {
+  conLugar: function(DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,callback) {
     return this.query(`
-      SELECT DependId, TurnoId, Grupos * AlumnosPorGrupo - (
+      SELECT DependId, DependDesc, DependNom, LugarDireccion, LocNombre, DeptoNombre, TurnoId, Grupos * AlumnosPorGrupo - (
         -- inscriptos
         SELECT count(*)
         FROM INSCRIPCIONES i
@@ -42,15 +46,29 @@ module.exports = {
           AND EstadosInscriId<5
       ) saldo
       FROM CUPOS c
-      WHERE FLOOR(DependId/100)=?
+      JOIN Direcciones.DEPENDLUGAR
+      USING (DependId)
+      JOIN Direcciones.LUGARES l
+      USING (LugarId)
+      JOIN Direcciones.DEPENDENCIAS d
+      USING (DependId)
+      JOIN Direcciones.LOCALIDAD
+      USING (DeptoId,LocId)
+      JOIN Direcciones.DEPARTAMENTO
+      USING (DeptoId)
+      WHERE DeptoId=?
+        AND LocId=?
         AND PlanId=?
         AND CicloId=?
         AND GradoId=?
         AND OrientacionId=?
         AND OpcionId=?
         AND FechaInicioCurso=?
+        AND l.StatusId=1
+        AND d.StatusId=1
+      HAVING saldo>0
     `,
-    [DeptoId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso],
+    [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso],
     function(err,result){
       if (err) {
         return callback(err, undefined);
