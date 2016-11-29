@@ -48,4 +48,11 @@ module.exports.policies = {
 		// before letting any users feed our rabbits
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
 	// }
+
+  FormController: {
+    'paso1': ['intentos'],
+    'paso2': ['intentos'],
+    'paso3': ['intentos'],
+    'paso4': ['intentos'],
+  },
 };
