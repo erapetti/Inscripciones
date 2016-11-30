@@ -34,6 +34,8 @@ module.exports = {
   log: {
   //   level: "silent"
     level: "error"
-  }
+  },
+
+  baseurl: 'http://servicios.ces.edu.uy/inscripciones/',
 
 };

@@ -20,7 +20,7 @@
               <ul class="list-group">
                 <li class="list-group-item">
                   <h4 class="media-heading"><b>Liceo</b>:
-                    <div>
+                    <div class="bloque">
                       <%= liceo.DependDesc %>
                       <% if (liceo.DependNom) {%><br><%= liceo.DependNom %><% } %>
                     </div>
@@ -28,16 +28,24 @@
                 </li>
                 <li class="list-group-item">
                   <b>Dirección:</b>
-                  <%= liceo.LugarDireccion %>, <%= liceo.LocNombre %>, <%= liceo.DeptoNombre %>
+                  <div class="bloque">
+                    <%= liceo.LugarDireccion %><br>
+                    <%= liceo.LocNombre %>, <%= liceo.DeptoNombre %>
+                  </div>
                   <a class="mapa" href="#"><span class="glyphicon glyphicon-map-marker"></span> Ver mapa</a>
                 </li>
                 <li class="list-group-item">
                   <b>Estadísticas:</b>
                   <a href="http://www.anep.edu.uy/monitorces/servlet/fichaliceo?L,<%= liceo.DependId %>">Monitor educativo</a>
                 </li>
+                <% if (liceo.transportes) { %>
                 <li class="list-group-item">
                   <b>Líneas de transporte:</b>
+                  <div class="bloque">
+                    <%= liceo.transportes %>
+                  </div>
                 </li>
+                <% } %>
               </ul>
               <form method="post" class0="form-horizontal" id="frm-paso4" action='paso5'>
                 <input type="hidden" name="dependId-destino" value="<%= liceo.dependId %>">

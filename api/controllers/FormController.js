@@ -10,6 +10,8 @@ module.exports = {
 	// métodos del modelo:
 	paso1: function (req, res) {
 
+		req.session.authenticated = 1;
+
 		Paises.find({PaisVer:'S'}).exec(function(err, paises){
 			if (err) {
 					return res.serverError(err);
@@ -62,7 +64,6 @@ module.exports = {
 
 			Inscripciones.find({PerId:persona.perid,EstadosInscriId:1,FechaInicioCurso:inicioCurso})
 									 .sort('InscripcionId DESC')
-									 .limit(1) // en el plan 27 no pueden haber multiinscripciones
 									 .populate('DependId')
 									 .populate('PlanId')
 									 .populate('CicloId')
@@ -102,7 +103,7 @@ module.exports = {
 		req.session.opcionId = opcionId;
 		req.session.turnoId = turnoId;
 
-		return res.view({departamento:,localidad});
+		return res.view({departamento:{},localidad:{}});
 	},
 
 	paso4: function (req, res) {
@@ -126,6 +127,9 @@ module.exports = {
 		}
 
 		Cupos.conLugar(deptoId,locId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,liceos){
+			if (err) {
+				return res.serverError(err);
+			}
 
 			return res.view({liceos:liceos});
 		});

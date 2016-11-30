@@ -31,7 +31,7 @@ module.exports = {
   },
   conLugar: function(DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,callback) {
     return this.query(`
-      SELECT DependId, DependDesc, DependNom, LugarDireccion, LocNombre, DeptoNombre, TurnoId, Grupos * AlumnosPorGrupo - (
+      SELECT DependId, DependDesc, DependNom, LocNombre, DeptoNombre, TurnoId, Grupos * AlumnosPorGrupo - (
         -- inscriptos
         SELECT count(*)
         FROM INSCRIPCIONES i
@@ -44,7 +44,9 @@ module.exports = {
           AND i.OpcionId=c.OpcionId
           AND i.FechaInicioCurso=c.FechaInicioCurso
           AND EstadosInscriId<5
-      ) saldo
+      ) saldo,
+      concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion,
+      group_concat(transportes ORDER BY transportes SEPARATOR ', ') transportes
       FROM CUPOS c
       JOIN Direcciones.DEPENDLUGAR
       USING (DependId)
@@ -56,6 +58,10 @@ module.exports = {
       USING (DeptoId,LocId)
       JOIN Direcciones.DEPARTAMENTO
       USING (DeptoId)
+      JOIN Direcciones.DIRECCIONES
+      ON LugarDirId=DirId
+      LEFT JOIN Direcciones.transportes
+      USING (DependId)
       WHERE DeptoId=?
         AND LocId=?
         AND PlanId=?
@@ -66,6 +72,7 @@ module.exports = {
         AND FechaInicioCurso=?
         AND l.StatusId=1
         AND d.StatusId=1
+      GROUP BY DependId
       HAVING saldo>0
     `,
     [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso],

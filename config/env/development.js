@@ -21,4 +21,5 @@ module.exports = {
   //   connection: 'someMongodbServer'
   // }
 
+  baseurl: 'http://localhost:1337/',
 };
