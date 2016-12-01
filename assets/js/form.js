@@ -187,3 +187,11 @@ $('div#date').datepicker({
     daysOfWeekDisabled: "0",
     todayHighlight: true
 });
+
+function ruee(dependId) {
+  var deptoId = floor(dependId/100);
+  // paso el depto a la codificación que usa CODICEN
+  deptoId = (deptoId<10 ? deptoId+1 : (deptoId>10 ? deptoId : 1));
+  // calculo el ruee
+  return 1200000 + deptoId*1000 + dependId%100;
+}
