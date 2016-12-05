@@ -8,6 +8,7 @@
 module.exports = {
 
 	// métodos del modelo:
+
 	paso1: function (req, res) {
 
 		req.session.authenticated = 1;
@@ -26,8 +27,6 @@ module.exports = {
 		var pais = req.param('pais') ? req.param('pais').substr(0,2) : req.session.pais;
 		var doccod = req.param('doccod') ? req.param('doccod').substr(0,3) : req.session.doccod;
 		var perdocid = req.param('perdocid') ? req.param('perdocid').substr(0,15) : req.session.perdocid;
-		var perdocid_adulto = req.param('perdocid-adulto') ? req.param('perdocid-adulto').substr(0,15) : req.session.perdocid_adulto;
-		var telefono_adulto = req.param('telefono-adulto') ? req.param('telefono-adulto').substr(0,15) : req.session.telefono_adulto;
 
 		if (!req.session.perdocid || perdocid!=req.session.perdocid) {
 				// salvo la cantidad de intentos con cédulas diferentes para evitar abusos
@@ -36,8 +35,6 @@ module.exports = {
 		req.session.pais = pais;
 		req.session.doccod = doccod;
 		req.session.perdocid = perdocid;
-		req.session.perdocid_adulto = perdocid_adulto;
-		req.session.telefono_adulto = telefono_adulto;
 
 		turnosDesc={'1':'Matutino', '2':'Tarde', '3':'Vespertino', '4':'Nocturno', 'D':'Diurno', 'N':'Nocturno'};
 
