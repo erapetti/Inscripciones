@@ -158,15 +158,53 @@ $('#dd-departamento').change(function() {
   $('#btn-dd-localidad').html( "Seleccione una localidad" + ' <span class="caret"></span>');
   // actualizo input
   $('#dd-localidad').val("");
+  actualizoLocalidades();
+});
+
+function actualizoLocalidades(){
   // obtengo las localidades del departamento seleccionado
-  $.getJSON("../localidades/conLiceo?DeptoId="+$(this).val(), function(data) {
+  $.getJSON("../localidades/conLiceo?DeptoId="+$('#dd-departamento').val(), function(data) {
     $('#ul-dd-localidad').html(''); // borro las opciones que tenía
     data.forEach(function(loc) {
       $('#ul-dd-localidad').append('<li><a href="#" dd="localidad" data="'+loc.LocId+'">'+loc.LocNombre+'</a></li>');
     });
+    // inicialización del botón, copiado de document.ready
+    var campo = $('#ul-dd-localidad').attr('dd');
+    var val = $('#dd-'+campo).val();
+    if (typeof val !== 'undefined' && val!=="") {
+      var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").text();
+      // actualizo etiqueta del botón
+      $('#btn-dd-'+campo).html( texto + ' <span class="caret"></span>');
+    }
   });
-});
+};
 
+if ($('#dd-departamento').val() > 0) {
+  actualizoLocalidades(); // inicialización
+}
+
+function validate_paso3() {
+  $('button.dropdown-toggle').removeClass('red');
+  var error = 0;
+  $('input').each(function(index){
+    if ($(this).val() === "") {
+      $('#btn-'+$(this).attr('id')).addClass('red');
+      error = 1;
+    }
+  });
+  if (error) {
+    mensaje("Debe ingresar todos los valores solicitados");
+    return 0;
+  }
+  mensaje('');
+  return 1;
+};
+
+$("div#paso3 #btn-paso4").click(function(e){
+  if (!validate_paso3()) {
+    e.preventDefault();
+  }
+});
 /*************************
  **  PASO 4
  *************************/

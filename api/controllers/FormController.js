@@ -32,9 +32,6 @@ module.exports = {
 				// salvo la cantidad de intentos con cédulas diferentes para evitar abusos
 				req.session.intentos += 1;
 		}
-		req.session.pais = pais;
-		req.session.doccod = doccod;
-		req.session.perdocid = perdocid;
 
 		turnosDesc={'1':'Matutino', '2':'Tarde', '3':'Vespertino', '4':'Nocturno', 'D':'Diurno', 'N':'Nocturno'};
 
@@ -79,6 +76,16 @@ module.exports = {
 					if (err) {
 						return res.serverError(err);
 					}
+
+					// salvo los parámetros en la sesión
+					req.session.pais = pais;
+					req.session.doccod = doccod;
+					req.session.perdocid = perdocid;
+					// salvo en la sesión el resto de la información
+					req.session.persona = persona;
+					req.session.inscripciones = inscripciones;
+					req.session.direccion = direccion;
+
 					return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc});
 				});
 			});
@@ -86,21 +93,43 @@ module.exports = {
 	},
 
 	paso3: function (req, res) {
-		var planId = req.param('planId') ? parseInt(req.param('planId')) : req.session.planId;
-		var cicloId = req.param('cicloId') ? parseInt(req.param('cicloId')) : req.session.cicloId;
-		var gradoId = req.param('gradoId') ? parseInt(req.param('gradoId')) : req.session.gradoId;
-		var orientacionId = req.param('orientacionId') ? parseInt(req.param('orientacionId')) : req.session.orientacionId;
-		var opcionId = req.param('opcionId') ? parseInt(req.param('opcionId')) : req.session.opcionId;
-		var turnoId = req.param('turnoId') ? req.param('turnoId').substr(0,1) : req.session.turnoId;
+		var deptoId = typeof req.session.direccion.DeptoId !== "undefined" ? req.session.direccion.DeptoId : undefined;
+		var locId = typeof req.session.direccion.LocId !== "undefined" ? req.session.direccion.LocId : undefined;
 
-		req.session.planId = planId;
-		req.session.cicloId = cicloId;
-		req.session.gradoId = gradoId;
-		req.session.orientacionId = orientacionId;
-		req.session.opcionId = opcionId;
-		req.session.turnoId = turnoId;
+		if (!deptoId || !locId || typeof req.session.inscripciones !== "object") {
+			return res.serverError(new Error("Parámetros incorrectos"));
+		}
 
-		return res.view({departamento:{},localidad:{}});
+		// Armo opciones de plan-ciclo-grado-orientacion-opcion según las inscripciones que tiene
+		var planes = Array();
+		var ciclos = Array();
+		var grados = Array();
+		var orientaciones = Array();
+		var opciones = Array();
+		req.session.inscripciones.forEach(function(inscripcion){
+			planes[inscripcion.PlanId.PlanId] = inscripcion.PlanId.PlanNombre;
+			ciclos[inscripcion.CicloId.CicloId] = inscripcion.CicloId.CicloDesc;
+			grados[inscripcion.GradoId.GradoId] = inscripcion.GradoId.GradoDesc;
+			orientaciones[inscripcion.OrientacionId.OrientacionId] = inscripcion.OrientacionId.OrientacionDesc;
+			opciones[inscripcion.OpcionId.OpcionId] = inscripcion.OpcionId.OpcionDesc;
+		});
+
+		if (planes.length==0 || ciclos.length==0 || grados.length==0 || orientaciones.length==0 || opciones.length==0) {
+			return res.serverError(new Error("Parámetros incorrectos"));
+		}
+
+		// valores por defecto tomados de la sesión
+		req.session.planId = req.session.planId || req.session.inscripciones[0].PlanId.PlanId;
+		req.session.cicloId = req.session.cicloId || req.session.inscripciones[0].CicloId.CicloId;
+		req.session.gradoId = req.session.gradoId || req.session.inscripciones[0].GradoId.GradoId;
+		req.session.orientacionId = req.session.orientacionId || req.session.inscripciones[0].OrientacionId.OrientacionId;
+		req.session.opcionId = req.session.opcionId || req.session.inscripciones[0].OpcionId.OpcionId;
+
+		return res.view({deptoId:deptoId,locId:locId,
+										 planes:planes,ciclos:ciclos,grados:grados,orientaciones:orientaciones,opciones:opciones,
+										 planId:req.session.planId,cicloId:req.session.cicloId,gradoId:req.session.gradoId,
+									   orientacionId:req.session.orientacionId,opcionId:req.session.opcionId
+									 });
 	},
 
 	paso4: function (req, res) {

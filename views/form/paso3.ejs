@@ -14,11 +14,11 @@
               <label>Departamento</label>:
             </td><td>
               <div class="btn-group">
-                <input type="hidden" name="departamento" value="<% if (typeof departamento !== 'undefined') { %><%= departamento %><% } %>" id="dd-departamento">
+                <input type="hidden" name="departamento" value="<%= deptoId %>" id="dd-departamento">
                 <button type="button" id="btn-dd-departamento" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Seleccione un departamento <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" dd="departamento">
                   <li><a href="#" dd="departamento" data="1">Artigas</a></li>
                   <li><a href="#" dd="departamento" data="2">Canelones</a></li>
                   <li><a href="#" dd="departamento" data="3">Cerro Largo</a></li>
@@ -45,16 +45,102 @@
               <label>Localidad</label>:
             </td><td>
               <div class="btn-group">
-                <input type="hidden" name="localidad" value="<% if (typeof localidad !== 'undefined') { %><%= localidad %><% } %>" id="dd-localidad">
+                <input type="hidden" name="localidad" value="<%= locId %>" id="dd-localidad">
                 <button type="button" id="btn-dd-localidad" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Seleccione una localidad <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" id="ul-dd-localidad">
-                  <li><a href="#" dd="localidad" data="1">Montevideo</a></li>
+                <ul class="dropdown-menu" dd="localidad" id="ul-dd-localidad">
+                  <!-- se carga por ajax -->
                 </ul>
               </div>
+            </td></tr><tr><td>
+
+              <label>Plan</label>:
+            </td><td>
+
+              <div class="btn-group">
+                <input type="hidden" name="plan" value="<%= planId %>" id="dd-plan">
+                <button type="button" id="btn-dd-plan" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Seleccione un plan <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" dd="plan">
+                <% for (plan in planes) { %>
+                  <li><a href="#" dd="plan" data="<%= plan %>"><%= planes[plan] %></a></li>
+                <% } %>
+                </ul>
+              </div>
+
+            </td></tr><tr><td>
+
+              <label>Ciclo</label>:
+            </td><td>
+
+              <div class="btn-group">
+                <input type="hidden" name="ciclo" value="<%= cicloId %>" id="dd-ciclo">
+                <button type="button" id="btn-dd-ciclo" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Seleccione un ciclo <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" dd="ciclo">
+                <% for (ciclo in ciclos) { %>
+                  <li><a href="#" dd="ciclo" data="<%= ciclo %>"><%= ciclos[ciclo] %></a></li>
+                <% } %>
+                </ul>
+              </div>
+
+            </td></tr><tr><td>
+
+              <label>Grado</label>:
+            </td><td>
+
+              <div class="btn-group">
+                <input type="hidden" name="grado" value="<%= gradoId %>" id="dd-grado">
+                <button type="button" id="btn-dd-grado" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Seleccione un grado <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" dd="grado">
+                <% for (grado in grados) { %>
+                  <li><a href="#" dd="grado" data="<%= grado %>"><%= grados[grado] %></a></li>
+                <% } %>
+                </ul>
+              </div>
+
+            </td></tr><tr><td>
+
+              <label>Orientación</label>:
+            </td><td>
+
+              <div class="btn-group">
+                <input type="hidden" name="orientacion" value="<%= orientacionId %>" id="dd-orientacion">
+                <button type="button" id="btn-dd-orientacion" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Seleccione una orientacion <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" dd="orientacion">
+                <% for (orientacion in orientaciones) { %>
+                  <li><a href="#" dd="orientacion" data="<%= orientacion %>"><%= orientaciones[orientacion] %></a></li>
+                <% } %>
+                </ul>
+              </div>
+
+            </td></tr><tr><td>
+
+              <label>Opción</label>:
+            </td><td>
+
+              <div class="btn-group">
+                <input type="hidden" name="opcion" value="<%= opcionId %>" id="dd-opcion">
+                <button type="button" id="btn-dd-opcion" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Seleccione una opcion <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" dd="opcion">
+                <% for (opcion in opciones) { %>
+                  <li><a href="#" dd="opcion" data="<%= opcion %>"><%= opciones[opcion] %></a></li>
+                <% } %>
+                </ul>
+              </div>
+
             </td></tr>
           </table>
+
 
         </div>
       </div>
