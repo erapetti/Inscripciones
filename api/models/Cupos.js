@@ -31,9 +31,8 @@ module.exports = {
   },
   conLugar: function(DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,callback) {
     return this.query(`
-      SELECT DependId, DependDesc, DependNom, LocNombre, DeptoNombre, TurnoId, Grupos * AlumnosPorGrupo - (
-        -- inscriptos
-        SELECT count(*)
+      SELECT DependId, DependDesc, DependNom, LocId, LocNombre, DeptoNombre, TurnoId, sum(Grupos) * min(AlumnosPorGrupo) - (
+        SELECT count(*) inscriptos
         FROM INSCRIPCIONES i
         WHERE i.DependId=c.DependId
           AND i.PlanId=c.PlanId
@@ -72,7 +71,7 @@ module.exports = {
         AND FechaInicioCurso=?
         AND l.StatusId=1
         AND d.StatusId=1
-      GROUP BY DependId
+      GROUP BY DeptoId,LocId,DependId,DirId,TurnoId
       HAVING saldo>0
     `,
     [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso],

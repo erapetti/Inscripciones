@@ -12,7 +12,7 @@
     <h2>Solicitar cambio de liceo</h2>
 
 
-
+      <% if (typeof liceos !== "undefined") { %>
       <div class="panel panel-default">
         <div class="panel-heading">Liceos con cupos disponibles: </div>
         <div class="panel-body">
@@ -56,7 +56,7 @@
                 <% } %>
               </ul>
               <form method="post" class0="form-horizontal" id="frm-paso4" action='paso5'>
-                <input type="hidden" name="dependId-destino" value="<%= liceo.dependId %>">
+                <input type="hidden" name="dependId-destino" value="<%= liceo.DependId %>">
                 <button type="submit" class="btn btn-primary" id="btn-paso4">Agendar entrevista <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
               </form>
             </div>
@@ -64,14 +64,13 @@
           <% }) %>
         </div>
       </div>
-
-      <button type="submit" class="btn btn-primary" id="btn-back" name="paso3"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
-
+      <% } %>
 
       <div class="alert alert-danger" id="mensaje" style="display:none"></div>
       <script type="text/javascript">
-        textoMensaje='<% if (typeof mensaje!=='undefined') { %><%= mensaje %><% } %>'
+        textoMensaje='<% if (typeof mensaje!=='undefined') { %><%- mensaje %><% } %>'
       </script>
 
+      <button type="submit" class="btn btn-primary" id="btn-back" name="paso3"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
   </div>
 </div>

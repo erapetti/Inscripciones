@@ -135,20 +135,16 @@ module.exports = {
 	paso4: function (req, res) {
 		var deptoId = req.param('departamento') ? parseInt(req.param('departamento')) : req.session.deptoId;
 		var locId = req.param('localidad') ? parseInt(req.param('localidad')) : req.session.locId;
+		var planId = req.param('plan') ? parseInt(req.param('plan')) : req.session.planId;
+		var cicloId = req.param('ciclo') ? parseInt(req.param('ciclo')) : req.session.cicloId;
+		var gradoId = req.param('grado') ? parseInt(req.param('grado')) : req.session.gradoId;
+		var orientacionId = req.param('orientacion') ? parseInt(req.param('orientacion')) : req.session.orientacionId;
+		var opcionId = req.param('opcion') ? parseInt(req.param('opcion')) : req.session.opcionId;
 
-		req.session.deptoId = deptoId;
-		req.session.locId = locId;
-
-		var planId = req.session.planId;
-		var cicloId = req.session.cicloId;
-		var gradoId = req.session.gradoId;
-		var orientacionId = req.session.orientacionId;
-		var opcionId = req.session.opcionId;
-		var turnoId = req.session.turnoId;
+		var turnoId = 'D'; // por ahora sólo tenemos turno diurno
 		var inicioCurso = new Date(req.session.inicioCurso);
 
 		if (!deptoId || !locId || !planId || !cicloId || !gradoId || !orientacionId || !opcionId || !turnoId || !inicioCurso) {
-				console.log(deptoId,locId,planId,cicloId,gradoId,orientacionId,opcionId,turnoId,inicioCurso);
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
 
@@ -157,7 +153,47 @@ module.exports = {
 				return res.serverError(err);
 			}
 
-			return res.view({liceos:liceos});
+			req.session.deptoId = deptoId;
+			req.session.locId = locId;
+			req.session.planId = planId;
+			req.session.cicloId = cicloId;
+			req.session.gradoId = gradoId;
+			req.session.orientacionId = orientacionId;
+			req.session.opcionId = opcionId;
+			req.session.turnoId = turnoId;
+			req.session.liceos = liceos;
+
+			if (typeof liceos[0] === 'undefined') {
+				return res.view({mensaje:"No hay liceos con cupos disponibles para el curso seleccionado.<br>Más adelante pueden liberarse cupos si otros estudiantes se cambian de liceo."});
+			}
+
+			reservar(perId,planId,cicloId,gradoId,orientacionId,opcionId,function(err,reserva) {
+				if (err) {
+					return res.serverError(err);
+				}
+
+				req.session.reserva = reserva;
+				
+				return res.view({liceos:liceos});
+			});
 		});
+	},
+
+	paso5: function (req, res) {
+		var destinoId = req.param('dependId-destino') ? parseInt(req.param('dependId-destino')) : req.session.destinoId;
+
+		if (!destinoId) {
+				return res.serverError(new Error("parámetros incorrectos"));
+		}
+
+		if (! req.session.liceos.reduce(function(encontrado,liceo){
+					return encontrado || (liceo.DependId == destinoId);
+				},false)) {
+				// el liceo pedido no está entre los liceos con cupo que le fueron ofrecidos
+				return res.serverError(new Error("parámetros incorrectos"));
+		}
+		req.session.destinoId = destinoId;
+
+		return res.view({});
 	},
 };
