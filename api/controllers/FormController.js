@@ -93,8 +93,8 @@ module.exports = {
 	},
 
 	paso3: function (req, res) {
-		var deptoId = typeof req.session.direccion.DeptoId !== "undefined" ? req.session.direccion.DeptoId : undefined;
-		var locId = typeof req.session.direccion.LocId !== "undefined" ? req.session.direccion.LocId : undefined;
+		var deptoId = typeof req.session.deptoId !== 'undefined' ? req.session.deptoId : typeof req.session.direccion.DeptoId !== 'undefined' ? req.session.direccion.DeptoId : undefined;
+		var locId = typeof req.session.locId !== 'undefined' ? req.session.locId : typeof req.session.direccion.LocId !== "undefined" ? req.session.direccion.LocId : undefined;
 
 		if (!deptoId || !locId || typeof req.session.inscripciones !== "object") {
 			return res.serverError(new Error("Parámetros incorrectos"));
@@ -144,7 +144,7 @@ module.exports = {
 		var turnoId = 'D'; // por ahora sólo tenemos turno diurno
 		var inicioCurso = new Date(req.session.inicioCurso);
 
-		if (!deptoId || !locId || !planId || !cicloId || !gradoId || !orientacionId || !opcionId || !turnoId || !inicioCurso) {
+		if (!deptoId || !locId || !planId || !cicloId || !gradoId || !orientacionId || !opcionId || !turnoId || !inicioCurso || typeof req.session.persona.perid === 'undefined') {
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
 
@@ -167,13 +167,13 @@ module.exports = {
 				return res.view({mensaje:"No hay liceos con cupos disponibles para el curso seleccionado.<br>Más adelante pueden liberarse cupos si otros estudiantes se cambian de liceo."});
 			}
 
-			reservar(perId,planId,cicloId,gradoId,orientacionId,opcionId,function(err,reserva) {
+			Entrevista.reservar(req.session.persona.perid,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,reserva) {
 				if (err) {
 					return res.serverError(err);
 				}
 
 				req.session.reserva = reserva;
-				
+
 				return res.view({liceos:liceos});
 			});
 		});
@@ -186,9 +186,11 @@ module.exports = {
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
 
-		if (! req.session.liceos.reduce(function(encontrado,liceo){
-					return encontrado || (liceo.DependId == destinoId);
-				},false)) {
+		// valido que el liceo destino haya estado entre los que le ofrecí
+		req.session.destino = req.session.liceos.reduce(function(destino,liceo){
+			return typeof destino !== 'undefined' ? destino : (liceo.DependId == destinoId ? liceo : undefined);
+		}, undefined);
+		if (! req.session.destino) {
 				// el liceo pedido no está entre los liceos con cupo que le fueron ofrecidos
 				return res.serverError(new Error("parámetros incorrectos"));
 		}

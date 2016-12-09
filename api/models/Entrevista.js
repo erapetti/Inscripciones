@@ -31,9 +31,9 @@ module.exports = {
     PerId: 'integer',
   },
 
-  reservar:function(perId,planId,cicloId,gradoId,orientacionId,opcionId,callback) {
+  reservar:function(perId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,callback) {
     var vencimiento = new Date();
-    vencimiento.setHour(vencimiento.Hour()+1);
+    vencimiento.setHours(vencimiento.getHours()+1);
 
     // reservo el cupo o actualizo la reserva existente
     var findObj = {	PerId:perId,
@@ -42,6 +42,7 @@ module.exports = {
                     GradoId:gradoId,
                     OrientacionId:orientacionId,
                     OpcionId:opcionId,
+                    FechaInicioCurso:inicioCurso,
     };
     var createObj = {	PerId:perId,
                       PlanId:planId,
@@ -49,19 +50,24 @@ module.exports = {
                       GradoId:gradoId,
                       OrientacionId:orientacionId,
                       OpcionId:opcionId,
+                      FechaInicioCurso:inicioCurso,
                       Vencimiento:vencimiento,
     };
     Entrevista.findOrCreate(findObj,createObj,function(err,entrevista){
       if (err) {
-        callback(err,undefined);
+        return callback(err,undefined);
       }
 
-      console.log("entrevistas",entrevista);
-      console.log(entrevista.Vencimiento);
-      if (entrevista.Vencimiento < vencimiento) {
-        console.log("actualizo vencimiento");
+      if (entrevista.Vencimiento >= vencimiento) {
+        return callback(undefined,entrevista);
       }
-      callback(undefined,entrevista);
+
+      Entrevista.update({id:entrevista.id},{Vencimiento:vencimiento},function(err){
+        if (err) {
+          return callback(err,undefined);
+        }
+        return callback(undefined,entrevista);
+      });
     });
   },
 };
