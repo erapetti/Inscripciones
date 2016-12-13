@@ -7,7 +7,11 @@
       <div class="panel-heading">Seleccionar día para la entrevista: </div>
       <div class="panel-body">
 
-        <%- partial ('fecha.ejs') %>
+        <input type="hidden" id='DependId' value="<%= destinoId %>">
+        <input type="hidden" id="Fecha" name="Fecha" data-provide="datepicker-inline">
+        <div id="date"></div>
+
+        <ul id='ul-disponible'></ul>
 
       </div>
     </div>

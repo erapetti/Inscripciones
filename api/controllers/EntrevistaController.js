@@ -1,7 +1,7 @@
 /**
- * LocalidadesController
+ * EntrevistaController
  *
- * @description :: Server-side logic for managing Localidades
+ * @description :: Server-side logic for managing Entrevista`
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
@@ -13,17 +13,18 @@ module.exports = {
 	populate: function() { return; },
 	add: function() { return; },
 	remove: function() { return; },
-	conLiceo: function(req,res) {
-		var deptoId = parseInt(req.param('DeptoId'));
-		if(! Number.isInteger(deptoId) ) {
+	disponible: function(req,res) {
+		var dependId = parseInt(req.param('DependId'));
+    var fecha = new Date(req.param('Fecha'));
+		if(! Number.isInteger(dependId) || typeof fecha === 'undefined') {
 			return res.json(500,{message:"parámetros incorrectos"});
 		}
-		Localidades.conLiceo(deptoId, function(err,localidades){
+		Entrevista.disponible(dependId, fecha, function(err,entrevistas){
 			if (err) {
-				console.log(err);
-					return res.json(500,{message:err.message});
+        console.log(err);
+				return res.json(500,{message:err.message});
 			}
-			res.json(localidades);
+			res.json(entrevistas);
 		});
 	},
 };

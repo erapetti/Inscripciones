@@ -205,6 +205,7 @@ $("div#paso3 #btn-paso4").click(function(e){
     e.preventDefault();
   }
 });
+
 /*************************
  **  PASO 4
  *************************/
@@ -215,15 +216,31 @@ $("div#paso3 #btn-paso5").click(function(e){
  }
 });
 
+/*************************
+ **  PASO 5
+ *************************/
 
+if ($('div#date')) {
+  // datepicker:
+  $('div#date').datepicker({
+      format: "yyyy-mm-dd",
+      todayBtn: "linked",
+      language: "es",
+      daysOfWeekDisabled: "0",
+      todayHighlight: true,
+      startDate: '2016-12-27',
+  });
+}
 
-// datepicker:
-$('div#date').datepicker({
-    format: "dd/mm/yyyy",
-    todayBtn: "linked",
-    language: "es",
-    daysOfWeekDisabled: "0",
-    todayHighlight: true
+$('div#date td').click(function(){
+  alert( $(this).html() );
+  $.getJSON("../entrevista/disponible?DependId="+$('#DependId').val()+"&Fecha="+$(this).html(), function(data) {
+    $('#ul-disponible').html(''); // borro las opciones que tenía
+    data.forEach(function(disponible) {
+      var hora = hora.getHours()+':'+hora.getMinutes();
+      $('#ul-disponible').append('<li><a href="#" data="'+hora+'">'+hora+'</a></li>');
+    });
+  });
 });
 
 function ruee(dependId) {

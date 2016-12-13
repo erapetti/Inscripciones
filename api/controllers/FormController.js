@@ -167,7 +167,7 @@ module.exports = {
 				return res.view({mensaje:"No hay liceos con cupos disponibles para el curso seleccionado.<br>Más adelante pueden liberarse cupos si otros estudiantes se cambian de liceo."});
 			}
 
-			Entrevista.reservar(req.session.persona.perid,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,reserva) {
+			Reserva.reservar(req.session.persona.perid,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,reserva) {
 				if (err) {
 					return res.serverError(err);
 				}
@@ -196,6 +196,6 @@ module.exports = {
 		}
 		req.session.destinoId = destinoId;
 
-		return res.view({});
+		return res.view({destinoId:destinoId});
 	},
 };
