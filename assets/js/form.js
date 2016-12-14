@@ -220,28 +220,34 @@ $("div#paso3 #btn-paso5").click(function(e){
  **  PASO 5
  *************************/
 
-if ($('div#date')) {
+if ($('input#Fecha')) {
   // datepicker:
-  $('div#date').datepicker({
+  $('input#Fecha').datepicker({
       format: "yyyy-mm-dd",
       todayBtn: "linked",
       language: "es",
       daysOfWeekDisabled: "0",
       todayHighlight: true,
       startDate: '2016-12-27',
+      autoclose: true,
   });
-}
 
-$('div#date td').click(function(){
-  alert( $(this).html() );
-  $.getJSON("../entrevista/disponible?DependId="+$('#DependId').val()+"&Fecha="+$(this).html(), function(data) {
-    $('#ul-disponible').html(''); // borro las opciones que tenía
-    data.forEach(function(disponible) {
-      var hora = hora.getHours()+':'+hora.getMinutes();
-      $('#ul-disponible').append('<li><a href="#" data="'+hora+'">'+hora+'</a></li>');
+  $('input#Fecha').change(function(){
+    $.getJSON("../entrevista/horasDisponibles?DependId="+$('#DependId').val()+"&Fecha="+$(this).val(), function(data) {
+      $('#ul-dd-hora').html(''); // borro las opciones que tenía
+      if (typeof data[0] === 'undefined') {
+        $('#btn-dd-hora').html('---');
+        mensaje('No hay horarios disponibles para el día seleccionado')
+      } else {
+        $('#btn-dd-hora').html('Seleccione una hora <span class="caret"></span>');
+        data.forEach(function(disponible) {
+          $('#ul-dd-hora').append('<li><a href="#" dd="hora" data="'+disponible.Hora+'">'+disponible.Hora+'</a></li>');
+        });
+        mensaje('');
+      }
     });
   });
-});
+}
 
 function ruee(dependId) {
   var deptoId = floor(dependId/100);

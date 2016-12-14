@@ -196,6 +196,6 @@ module.exports = {
 		}
 		req.session.destinoId = destinoId;
 
-		return res.view({destinoId:destinoId});
+		return res.view({destinoId:destinoId,fecha:"",hora:"",liceo:req.session.destino});
 	},
 };

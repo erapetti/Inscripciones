@@ -13,13 +13,14 @@ module.exports = {
 	populate: function() { return; },
 	add: function() { return; },
 	remove: function() { return; },
-	disponible: function(req,res) {
+	horasDisponibles: function(req,res) {
 		var dependId = parseInt(req.param('DependId'));
-    var fecha = new Date(req.param('Fecha'));
+		// paso las fechas a UTCString y lo corro algunas horas porque hace conversión de TimeZone
+    var fecha = new Date(req.param('Fecha')+"T05:00:00.000Z");
 		if(! Number.isInteger(dependId) || typeof fecha === 'undefined') {
 			return res.json(500,{message:"parámetros incorrectos"});
 		}
-		Entrevista.disponible(dependId, fecha, function(err,entrevistas){
+		Entrevista.horasDisponibles(dependId, fecha, function(err,entrevistas){
 			if (err) {
         console.log(err);
 				return res.json(500,{message:err.message});
