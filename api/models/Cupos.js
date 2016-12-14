@@ -74,7 +74,7 @@ module.exports = {
       GROUP BY DeptoId,LocId,DependId,DirId,TurnoId
       HAVING saldo>0
     `,
-    [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso],
+    [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso.fecha_ymd_toString()],
     function(err,result){
       if (err) {
         return callback(err, undefined);
@@ -85,4 +85,9 @@ module.exports = {
       return callback(undefined, (result===null ? undefined : result));
     });
   },
+};
+
+Date.prototype.fecha_ymd_toString = function() {
+        var sprintf = require("sprintf");
+        return sprintf("%04d-%02d-%02d", this.getFullYear(),this.getMonth()+1,this.getDate());
 };

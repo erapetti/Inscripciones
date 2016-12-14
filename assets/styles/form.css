@@ -37,7 +37,7 @@ div#paso5 div.bloque {display:inline-table;}
 div#paso5 .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
 div#paso5 img.media-object {border-radius:9px;max-width:50vw;}
 div#paso5 a.mapa {white-space:nowrap;float:right;}
-
+div#paso5 #Fecha {margin-bottom:5px;}
 
 div#inicio .t-align_center {text-align: center;}
 div#inicio .t-title_xxl {font-size: 50pt;line-height: 1.1;}

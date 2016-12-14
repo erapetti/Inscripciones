@@ -1,0 +1,44 @@
+<div id="paso6" class="paso">
+  <div id="content">
+
+    <h2>Entrevista en el nuevo liceo agendada</h2>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">Liceo seleccionado: </div>
+      <div class="panel-body">
+
+        <%- partial ('liceo.ejs') %>
+
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">Datos de la entrevista: </div>
+      <div class="panel-body">
+        <table class="table">
+          <tr>
+            <td><label>Fecha</label>:</td>
+            <td><ul><li><%= fechaHora %></li></ul></td>
+          </tr><tr>
+            <td><label>Documentación del alumno</label>:</td>
+            <td>
+              <ul>
+                <li>Cédula de identidad</li>
+                <li>Carné de Salud Adolescente</li>
+              </ul>
+            </td>
+          </tr><tr>
+            <td><label>Documentación del adulto</label>:</td>
+            <td>
+              <ul>
+                <li>Cédula de identidad</li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary">Imprimir comprobante</button>
+  </div>
+</div>

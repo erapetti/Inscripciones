@@ -53,7 +53,7 @@ module.exports = {
 				return res.view({mensaje:"No se encuentra una persona registrada con el documento dado.<br>Si ingresó correctamente el número de documento debe consultar dónde inscribirse en <a href='http://ces.edu.uy/index.php/reguladora-estudiantil'>el sitio web de CES</a>"});
 			}
 
-			var inicioCurso = new Date("2016-03-01T03:00:00.000Z");
+			var inicioCurso = new Date("2016-03-01T03:00:00Z");
 			req.session.inicioCurso = inicioCurso;
 
 			Inscripciones.find({PerId:persona.perid,EstadosInscriId:1,FechaInicioCurso:inicioCurso})
@@ -198,4 +198,22 @@ module.exports = {
 
 		return res.view({destinoId:destinoId,fecha:"",hora:"",liceo:req.session.destino});
 	},
+
+	paso6: function (req, res) {
+		var fecha = req.param('Fecha');
+		var hora = req.param('Hora');
+		var fechaHora = new Date(fecha+" "+hora);
+
+		if (!fecha || !hora || !req.session.destino) {
+				return res.serverError(new Error("parámetros incorrectos"));
+		}
+		return res.view({fechaHora:fechaHora.fechaHora_toString(),liceo:req.session.destino});
+	},
+};
+
+
+Date.prototype.fechaHora_toString = function() {
+        var sprintf = require("sprintf");
+				var mes = Array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre');
+        return sprintf("%02d de %s de %d a la hora %02d:%02d", this.getDate(),mes[this.getMonth()],this.getFullYear(),this.getHours(),this.getMinutes());
 };

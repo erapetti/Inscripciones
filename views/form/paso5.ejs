@@ -1,11 +1,3 @@
-<% function ruee(dependId) {
-  var deptoId = Math.floor(dependId/100);
-  // paso el depto a la codificación que usa CODICEN
-  deptoId = (deptoId<10 ? deptoId+1 : (deptoId>10 ? deptoId : 1));
-  // calculo el ruee
-  return 1200000 + deptoId*1000 + dependId%100;
-} %>
-
 <div id="paso5" class="paso">
   <div id="content">
 
@@ -15,86 +7,52 @@
       <div class="panel-heading">Liceo seleccionado: </div>
       <div class="panel-body">
 
-        <div class="media">
-          <div class="media-left hidden-xs hidden-sm">
-              <div class="passepartout">
-                <img class="media-object img-liceo" data="<%= liceo.DependId %>" alt="<%= liceo.DependDesc %>" height="265">
+        <%- partial ('liceo.ejs') %>
+
+      </div>
+    </div>
+
+    <form method="post" id="frm-paso5" action='paso6'>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Fecha y hora de la entrevista: </div>
+        <div class="panel-body">
+
+          <input type="hidden" id='DependId' value="<%= destinoId %>">
+
+          <table>
+            <tr><td>
+              <label>Fecha</label>:
+            </td><td>
+              <input type="text" id="Fecha" name="Fecha" data-provide="datepicker-inline" value="<%= fecha %>">
+
+            </td></tr><tr><td>
+
+              <label>Hora</label>:
+            </td><td>
+              <div class="btn-group">
+                <input type="hidden" name="Hora" value="<%= hora %>" id="dd-hora">
+                <button type="button" id="btn-dd-hora" class="btn btn-default dropdown-toggle disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  ---
+                </button>
+                <ul class="dropdown-menu" dd="hora" id="ul-dd-hora">
+                  <!-- se carga por ajax -->
+                </ul>
               </div>
-          </div>
-          <div class="media-body">
-            <ul class="list-group">
-              <li class="list-group-item">
-                <h4 class="media-heading"><b>Liceo</b>:
-                  <div class="bloque">
-                    <%= liceo.DependDesc %>
-                    <% if (liceo.DependNom) {%><br><%= liceo.DependNom %><% } %>
-                  </div>
-                </h4>
-              </li>
-              <li class="list-group-item">
-                <b>Dirección:</b>
-                <div class="bloque">
-                  <%= liceo.LugarDireccion %><br>
-                  <%= liceo.LocNombre %>, <%= liceo.DeptoNombre %>
-                </div>
-                <a class="mapa" target="_blank" href="http://sig.anep.edu.uy/siganep/home?factor=10&ruee=<%= ruee(liceo.DependId) %>"><span class="glyphicon glyphicon-map-marker"></span> Ver mapa</a>
-              </li>
-              <li class="list-group-item">
-                <b>Estadísticas:</b>
-                <a href="http://www.anep.edu.uy/monitorces/servlet/fichaliceo?L,<%= liceo.DependId %>">Monitor educativo</a>
-              </li>
-              <% if (liceo.transportes) { %>
-              <li class="list-group-item">
-                <b>Líneas de transporte:</b>
-                <div class="bloque">
-                  <%= liceo.transportes %>
-                </div>
-              </li>
-              <% } %>
-            </ul>
-          </div>
+            </td></tr>
+          </table>
+
         </div>
-
       </div>
-    </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">Fecha y hora de la entrevista: </div>
-      <div class="panel-body">
+      <div class="alert alert-danger" id="mensaje" style="display:none"></div>
+      <script type="text/javascript">
+        textoMensaje='<% if (typeof mensaje!=='undefined') { %><%- mensaje %><% } %>'
+      </script>
 
-        <input type="hidden" id='DependId' value="<%= destinoId %>">
+      <button type="submit" class="btn btn-primary" id="btn-back" name="paso4"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+      <button type="submit" class="btn btn-primary disabled" id="btn-paso6">Agendar entrevista <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
 
-        <table>
-          <tr><td>
-            <label>Fecha</label>:
-          </td><td>
-            <input type="text" id="Fecha" name="Fecha" data-provide="datepicker-inline" value="<%= fecha %>">
-
-          </td></tr><tr><td>
-
-            <label>Hora</label>:
-          </td><td>
-            <div class="btn-group">
-              <input type="hidden" name="hora" value="<%= hora %>" id="dd-hora">
-              <button type="button" id="btn-dd-hora" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Seleccione una hora <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" dd="hora" id="ul-dd-hora">
-                <!-- se carga por ajax -->
-              </ul>
-            </div>
-          </td></tr>
-        </table>
-
-      </div>
-    </div>
-
-    <div class="alert alert-danger" id="mensaje" style="display:none"></div>
-    <script type="text/javascript">
-      textoMensaje='<% if (typeof mensaje!=='undefined') { %><%- mensaje %><% } %>'
-    </script>
-
-    <button type="submit" class="btn btn-primary" id="btn-back" name="paso4"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
-    <button type="submit" class="btn btn-primary" id="btn-paso6">Agendar entrevista <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+    </form>
   </div>
 </div>

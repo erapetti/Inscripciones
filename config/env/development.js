@@ -23,3 +23,5 @@ module.exports = {
 
   baseurl: 'http://localhost:1337/',
 };
+
+process.env.TZ='America/Montevideo';

@@ -233,19 +233,28 @@ if ($('input#Fecha')) {
   });
 
   $('input#Fecha').change(function(){
+    $('#btn-paso6').addClass('disabled');
     $.getJSON("../entrevista/horasDisponibles?DependId="+$('#DependId').val()+"&Fecha="+$(this).val(), function(data) {
       $('#ul-dd-hora').html(''); // borro las opciones que tenía
       if (typeof data[0] === 'undefined') {
         $('#btn-dd-hora').html('---');
+        $('#btn-dd-hora').addClass('disabled');
         mensaje('No hay horarios disponibles para el día seleccionado')
       } else {
         $('#btn-dd-hora').html('Seleccione una hora <span class="caret"></span>');
+        $('#btn-dd-hora').removeClass('disabled');
         data.forEach(function(disponible) {
           $('#ul-dd-hora').append('<li><a href="#" dd="hora" data="'+disponible.Hora+'">'+disponible.Hora+'</a></li>');
         });
         mensaje('');
       }
     });
+  });
+
+  $('input#dd-hora').change(function(){
+    if ($(this).val().match(/^[0-9][0-9]:[0-9][0-9]/)) {
+      $('#btn-paso6').removeClass('disabled');
+    }
   });
 }
 
