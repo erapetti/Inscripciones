@@ -137,18 +137,7 @@ $("#btn-back").click(function(e){
 /*************************
  **  PASO 2
  *************************/
-if(0===1){
-$('#img-liceo').ready(function() {
- var img = new Image();
- img.onload = function() {
-   $('#img-liceo').attr('src', img.src);
- };
- img.onerror = function() {
-   $('#img-liceo').attr('src', '/images/template.jpg');
- };
- img.src = "/images/"+ $('#img-liceo').attr('data') +".jpg";
-});
-}
+
 /*************************
  **  PASO 3
  *************************/
@@ -168,6 +157,9 @@ function actualizoLocalidades(){
     data.forEach(function(loc) {
       $('#ul-dd-localidad').append('<li><a href="#" dd="localidad" data="'+loc.LocId+'">'+loc.LocNombre+'</a></li>');
     });
+    if (data.length==1) {
+      $('#dd-localidad').val(data[0].LocId);
+    }
     // inicialización del botón, copiado de document.ready
     var campo = $('#ul-dd-localidad').attr('dd');
     var val = $('#dd-'+campo).val();
