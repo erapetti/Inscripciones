@@ -51,9 +51,6 @@ module.exports.policies = {
 
   FormController: {
     'paso1': ['intentos'],
-    'paso2': ['sessionAuth','intentos'],
-    'paso3': ['sessionAuth','intentos'],
-    'paso4': ['sessionAuth','intentos'],
-    'paso5': ['sessionAuth','intentos'],
+    '*': ['sessionAuth','intentos'],
   },
 };

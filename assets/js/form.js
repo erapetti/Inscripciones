@@ -41,9 +41,6 @@ $(document).ready(function() {
      obj.attr('src', '/images/template.jpg');
    };
    img.src = "/images/"+ obj.attr('data') +".jpg";
-   if (obj.attr('data') === 'undefined') {
-     console.log(obj);
-   }
   });
 });
 

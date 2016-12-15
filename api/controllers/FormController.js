@@ -225,6 +225,10 @@ module.exports = {
 					return res.serverError(new Error("El horario pedido ya no está disponible"));
 				}
 
+				// ya quedó agendada esa fechaHora entonces la salvo en la sesión
+				req.session.fechaEntrevista = fechaHora.fecha_toString();
+				req.session.horaEntrevista = fechaHora.hora_toString();
+
 				// el vencimiento de la reserva es a última hora del día
 				fechaHora.setHours(23);
 				fechaHora.setMinutes(59);
@@ -235,16 +239,25 @@ module.exports = {
 						return res.serverError(err);
 					}
 
-					return res.view({fechaHora:fechaHora.fechaHora_toString(),liceo:req.session.destino});
+					res.redirect("form/comprobante");
 				});
 			});
 		});
 	},
+
+	comprobante: function(req, res) {
+
+		return res.view({fecha:req.session.fechaEntrevista,hora:req.session.horaEntrevista,liceo:req.session.destino});
+	},
 };
 
 
-Date.prototype.fechaHora_toString = function() {
+Date.prototype.fecha_toString = function() {
         var sprintf = require("sprintf");
 				var mes = Array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre');
-        return sprintf("%02d de %s de %d a la hora %02d:%02d", this.getDate(),mes[this.getMonth()],this.getFullYear(),this.getHours(),this.getMinutes());
+        return sprintf("%02d de %s de %d", this.getDate(),mes[this.getMonth()],this.getFullYear());
+};
+Date.prototype.hora_toString = function() {
+        var sprintf = require("sprintf");
+        return sprintf("%02d:%02d", this.getHours(),this.getMinutes());
 };
