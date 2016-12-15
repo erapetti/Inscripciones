@@ -61,9 +61,32 @@ module.exports = {
       }
     );
   },
+  asociarReserva: function(dependId,fechaHora,reservaId,callback) {
+    return this.query(`
+      UPDATE entrevista_inscripcion
+      SET Reserva=?
+      WHERE DependId=?
+        AND FechaHora=?
+        AND Reserva is null
+        AND Activa=1
+      LIMIT 1;
+      `,
+      [reservaId,dependId,fechaHora.fecha_ymdhms_toString()],
+      function(err,result){
+        if (err) {
+          return callback(err, undefined);
+        }
+        return callback(undefined, (result===null ? undefined : result));
+      }
+    );
+  },
 };
 
 Date.prototype.fecha_ymd_toString = function() {
         var sprintf = require("sprintf");
         return sprintf("%04d-%02d-%02d", this.getFullYear(),this.getMonth()+1,this.getDate());
+};
+Date.prototype.fecha_ymdhms_toString = function() {
+        var sprintf = require("sprintf");
+        return sprintf("%04d-%02d-%02d %02d:%02d:%02d", this.getFullYear(),this.getMonth()+1,this.getDate(),this.getHours(),this.getMinutes(),this.getSeconds());
 };

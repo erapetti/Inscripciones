@@ -53,20 +53,21 @@ module.exports = {
                       FechaInicioCurso:inicioCurso,
                       Vencimiento:vencimiento,
     };
-    Reserva.findOrCreate(findObj,createObj,function(err,entrevista){
+    Reserva.findOrCreate(findObj,createObj,function(err,reserva){
       if (err) {
         return callback(err,undefined);
       }
 
-      if (entrevista.Vencimiento >= vencimiento) {
-        return callback(undefined,entrevista);
+      if (reserva.Vencimiento >= vencimiento) {
+        // ya hay una reserva válida
+        return callback(undefined,reserva);
       }
 
-      Reserva.update({id:entrevista.id},{Vencimiento:vencimiento},function(err){
+      Reserva.update({id:reserva.id},{Vencimiento:vencimiento},function(err){
         if (err) {
           return callback(err,undefined);
         }
-        return callback(undefined,entrevista);
+        return callback(undefined,reserva);
       });
     });
   },

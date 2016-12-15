@@ -207,7 +207,38 @@ module.exports = {
 		if (!fecha || !hora || !req.session.destino) {
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
-		return res.view({fechaHora:fechaHora.fechaHora_toString(),liceo:req.session.destino});
+
+		Entrevista.asociarReserva(req.session.destinoId,fechaHora,req.session.reserva.id,function(err,resultado){
+			if (err) {
+				return res.serverError(err);
+			}
+			if (resultado.changedRows < 1) {
+				return res.serverError(new Error("El horario pedido ya no está disponible"));
+			}
+
+			Entrevista.findOne({DependId:req.session.destinoId,FechaHora:fechaHora,Activa:1,Reserva:req.session.reserva.id}).exec(function(err,entrevista){
+				if (err) {
+					return res.serverError(err);
+				}
+
+				if (!entrevista || !entrevista.id) {
+					return res.serverError(new Error("El horario pedido ya no está disponible"));
+				}
+
+				// el vencimiento de la reserva es a última hora del día
+				fechaHora.setHours(23);
+				fechaHora.setMinutes(59);
+				fechaHora.setSeconds(59);
+
+				Reserva.update({id:req.session.reserva.id},{Entrevista:entrevista.id,DependId:req.session.destinoId,Vencimiento:fechaHora}).exec(function(err,reserva){
+					if (err) {
+						return res.serverError(err);
+					}
+
+					return res.view({fechaHora:fechaHora.fechaHora_toString(),liceo:req.session.destino});
+				});
+			});
+		});
 	},
 };
 
