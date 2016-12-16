@@ -20,23 +20,15 @@ div.paso h2 {font-family:'JaapokkiRegular',sans-serif;letter-spacing:2px;margin:
 div.paso div.panel-heading {font-weight:bold;}
 div.paso .btn-primary {margin-bottom:1em;font-weight:bold;background-color: #507a78;border-color: #5f5f60;}
 div.paso .red {border-color:red;}
-
-div#paso2 div.bloque {display:inline-table;}
-div#paso2 .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
-div#paso2 img.media-object {border-radius:9px;max-width:50vw;}
+div.paso div.bloque {display:inline-table;}
+div.paso .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
+div.paso img.media-object {border-radius:9px;max-width:50vw;}
+div.paso a.mapa {white-space:nowrap;float:right;}
 
 div#paso3 td {border:0;}
 
-div#paso4 div.bloque {display:inline-table;}
-div#paso4 .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
-div#paso4 img.media-object {border-radius:9px;max-width:50vw;}
 div#paso4 #btn-paso4 {float:right;}
-div#paso4 a.mapa {white-space:nowrap;float:right;}
 
-div#paso5 div.bloque {display:inline-table;}
-div#paso5 .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
-div#paso5 img.media-object {border-radius:9px;max-width:50vw;}
-div#paso5 a.mapa {white-space:nowrap;float:right;}
 div#paso5 #Fecha {margin-bottom:5px;}
 
 div#inicio .t-align_center {text-align: center;}
