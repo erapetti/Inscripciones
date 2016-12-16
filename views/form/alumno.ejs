@@ -2,7 +2,7 @@
     <div class="panel-heading">
       Identificación del alumno
     </div>
-    <div class="panel-body">
+    <div class="panel-body form-horizontal">
 
       <div class="form-group">
         <label for="pais" class="col-sm-2 control-label">País:</label>
@@ -44,7 +44,7 @@
       <div class="form-group">
         <label for="perdocid" class="col-sm-2 control-label">Número de documento:</label>
         <div class="col-sm-2">
-          <input type="text" class="form-control" id="perdocid" name="perdocid" placeholder="12345678"<% if (sesion.perdocid){ %> value="<%= sesion.perdocid %>"<% } %>>
+          <input type="text" class="form-control" id="perdocid" name="perdocid" placeholder="12345678"<% if (perdocid){ %> value="<%= perdocid %>"<% } %>>
         </div>
         <label style="font-weight:normal;padding-top:0.5em" aria-label-for="perdocid">Sólo los números y las letras del número de documento</label>
       </div>

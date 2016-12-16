@@ -20,7 +20,7 @@ module.exports = {
 
 			req.session.paises = paises;
 
-			return res.view({paises:paises,sesion:req.session});
+			return res.view({paises:paises,perdocid:req.session.perdocid});
 		});
 	},
 
