@@ -17,7 +17,7 @@ function ddInit(btn) {
   }
   var val = $('#dd-'+campo).val();
   if (typeof val !== 'undefined' && val!=="") {
-    var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").text();
+    var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").first().text();
     // actualizo etiqueta del botón
     $('#btn-dd-'+campo).html( texto + (opciones>1 ? ' <span class="caret"></span>' : ''));
   }
@@ -63,6 +63,10 @@ $(document).ready(function() {
   }
 });
 
+$("#btn-back").click(function(e){
+  e.preventDefault();
+  document.location.replace( $(this).attr("name") );
+});
 
 /*************************
 **  INICIO
@@ -79,22 +83,10 @@ $('#arrow').click(function() {
 
 function validate_paso1() {
   $('#perdocid').removeClass('red');
-  $('#perdocid-adulto').removeClass('red');
-  $('#telefono-adulto').removeClass('red');
 
   if ($('#perdocid').val() === "") {
     mensaje("Debe ingresar el número de documento del alumno");
     $('#perdocid').addClass('red');
-    return 0;
-  }
-  if ($('#perdocid-adulto').val() === "") {
-    mensaje("Debe ingresar el número de documento del adulto");
-    $('#perdocid-adulto').addClass('red');
-    return 0;
-  }
-  if ($('#telefono-adulto').val() === "") {
-    mensaje("Debe ingresar el número de teléfono del adulto");
-    $('#telefono-adulto').addClass('red');
     return 0;
   }
   mensaje('');
@@ -107,6 +99,7 @@ $("div#paso1 #btn-paso1").click(function(e){
   }
 });
 
+if (0==1){
 // Identificación del alumno:
 $("#dd-pais a").click(function() {
   $('#pais').val( $(this).attr('data-value') );
@@ -125,31 +118,7 @@ $("#dd-doccod a").click(function() {
   $('#doccod').val( $(this).attr('data-value') );
   $('#lbl-doccod').text( $(this).text());
 });
-
-// Identificación del adulto:
-$("#dd-pais-adulto a").click(function() {
-  $('#pais-adulto').val( $(this).attr('data-value') );
-  $('#lbl-pais-adulto').text( $(this).text());
-  // cambio el tipo de documento dependiendo del país seleccionado:
-  if ($('#pais-adulto').val() === "UY") {
-    $('#doccod-adulto').val("CI");
-    $('#lbl-doccod-adulto').text( "Cédula de Identidad" );
-  } else {
-    $('#doccod-adulto').val("PSP");
-    $('#lbl-doccod-adulto').text( "Pasaporte" );
-  }
-});
-
-$("#dd-doccod-adulto a").click(function() {
-  $('#doccod-adulto').val( $(this).attr('data-value') );
-  $('#lbl-doccod-adulto').text( $(this).text());
-});
-
-$("#btn-back").click(function(e){
-  e.preventDefault();
-  document.location.replace( $(this).attr("name") );
-});
-
+}
 /*************************
  **  PASO 2
  *************************/
@@ -256,11 +225,36 @@ if ($('input#Fecha').length>0) {
   $('input#Fecha').change(actualizoHoras);
 
   $('input#dd-hora').change(function(){
-    if ($(this).val().match(/^[0-9][0-9]:[0-9][0-9]/)) {
-      $('#btn-paso6').removeClass('disabled');
-    }
+    validate_paso5();
   });
 }
+function validate_paso5() {
+  $('#perdocid-adulto').removeClass('red');
+  $('#telefono-adulto').removeClass('red');
+  if (! $('input#dd-hora').val().match(/^[0-9][0-9]:[0-9][0-9]/)) {
+    mensaje("Debe seleccionar una hora para la entrevista");
+    $('input#dd-hora').addClass('red');
+    return 0;
+  }
+  if ($('#perdocid-adulto').val() === "") {
+    mensaje("Debe ingresar el número de documento del adulto");
+    $('#perdocid-adulto').addClass('red');
+    return 0;
+  }
+  if ($('#telefono-adulto').val() === "") {
+    mensaje("Debe ingresar el número de teléfono del adulto");
+    $('#telefono-adulto').addClass('red');
+    return 0;
+  }
+  $('#btn-paso6').removeClass('disabled');
+  mensaje('');
+  return 1;
+};
+$("div#paso5 #btn-paso6").click(function(e){
+  if (!validate_paso5()) {
+    e.preventDefault();
+  }
+});
 
 function ruee(dependId) {
   var deptoId = floor(dependId/100);

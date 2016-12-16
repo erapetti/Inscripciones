@@ -3,24 +3,21 @@
     Identificación del adulto responsable que va a ir a la entrevista en el liceo
   </div>
   <div class="panel-body form-horizontal">
-    <div class="form-group">
 
+    <div class="form-group">
       <label for="pais-adulto" class="col-sm-2 control-label">País:</label>
-      <div class="dropdown col-sm-2" id="dd-pais-adulto">
-        <button class="btn btn-default dropdown-toggle" type="button" id="btn-pais-adulto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <input type="hidden" name="pais-adulto" value="UY" id="pais-adulto">
-          <span id="lbl-pais-adulto">Uruguay</span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="btn-pais-adulto">
-          <li><a data-value="AR">Argentina</a></li>
-          <li><a data-value="BR">Brasil</a></li>
-          <li><a data-value="PY">Paraguay</a></li>
-          <li><a data-value="UY">Uruguay</a></li>
-          <li><a data-value="VZ">Venezuela</a></li>
+      <div class="dropdown col-sm-2">
+        <input type="hidden" name="pais-adulto" value="UY" id="dd-pais-adulto">
+        <button class="btn btn-default dropdown-toggle" type="button" id="btn-dd-pais-adulto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+        <ul class="dropdown-menu" aria-labelledby="btn-dd-pais-adulto" dd="pais-adulto">
+          <li><a href="#" dd="pais-adulto" data="AR">Argentina</a></li>
+          <li><a href="#" dd="pais-adulto" data="BR">Brasil</a></li>
+          <li><a href="#" dd="pais-adulto" data="PY">Paraguay</a></li>
+          <li><a href="#" dd="pais-adulto" data="UY">Uruguay</a></li>
+          <li><a href="#" dd="pais-adulto" data="VZ">Venezuela</a></li>
           <li role="separator" class="divider"></li>
           <% paises.forEach(function(info) { -%>
-            <li><a data-value="<%= info.PaisCod %>"><%= info.PaisNom %></a></li>
+            <li><a href="#" dd="pais-adulto" data="<%= info.PaisCod %>"><%= info.PaisNom %></a></li>
           <% }) %>
         </ul>
       </div>
@@ -28,15 +25,12 @@
 
     <div class="form-group">
       <label for="doccod-adulto" class="col-sm-2 control-label">Tipo de documento:</label>
-      <div class="dropdown col-sm-2" id="dd-doccod-adulto">
-        <button class="btn btn-default dropdown-toggle" type="button" id="btn-doccod-adulto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <input type="hidden" name="doccod-adulto" value="CI" id="doccod-adulto">
-          <span id="lbl-doccod-adulto">Cédula de identidad</span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="btn-doccod-adulto">
-          <li><a data-value="CI">Cédula de identidad</a></li>
-          <li><a data-value="PSP">Pasaporte</a></li>
+      <div class="dropdown col-sm-2">
+        <input type="hidden" name="doccod-adulto" value="CI" id="dd-doccod-adulto">
+        <button class="btn btn-default dropdown-toggle" type="button" id="btn-dd-doccod-adulto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+        <ul class="dropdown-menu" aria-labelledby="btn-dd-doccod-adulto" dd="doccod-adulto">
+          <li><a href="#" dd="doccod-adulto" data="CI">Cédula de identidad</a></li>
+          <li><a href="#" dd="doccod-adulto" data="PSP">Pasaporte</a></li>
         </ul>
       </div>
     </div>
