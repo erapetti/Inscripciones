@@ -8,10 +8,14 @@ function mensaje(t) {
 };
 
 // inicialización de los dropdown-menu
-function btnInit(btn) {
+function ddInit(btn) {
   var campo = btn.attr('dd');
-  var val = $('#dd-'+campo).val();
   var opciones = $("ul.dropdown-menu[dd="+campo+"] li a").length;
+  if (!(opciones>1)) {
+    $('#dd-'+campo).val( $("ul.dropdown-menu[dd="+campo+"] li a").attr("data") );
+    $('#dd-'+campo).change();
+  }
+  var val = $('#dd-'+campo).val();
   if (typeof val !== 'undefined' && val!=="") {
     var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").text();
     // actualizo etiqueta del botón
@@ -30,7 +34,7 @@ $(document).ready(function() {
 
   // inicialización de los dropdown-menu
   $("ul.dropdown-menu").each(function(index,obj){
-    btnInit($(this));
+    ddInit($(this));
   });
   // función para actualizar los dropdown-menu cuando el usuario selecciona una opción
   $(document).on("click","ul.dropdown-menu li a",function(event) {
@@ -173,7 +177,7 @@ function actualizoLocalidades(){
       $('#dd-localidad').val(data[0].LocId);
     }
     // reinicialización del botón
-    btnInit($('#ul-dd-localidad'));
+    ddInit($('#ul-dd-localidad'));
   });
 };
 
@@ -245,6 +249,7 @@ if ($('input#Fecha').length>0) {
           $('#ul-dd-hora').append('<li><a href="#" dd="hora" data="'+disponible.Hora+'">'+disponible.Hora+'</a></li>');
         });
         mensaje('');
+        ddInit($('#ul-dd-hora'));
       }
     });
   };
