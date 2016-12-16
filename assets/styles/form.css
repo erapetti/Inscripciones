@@ -24,6 +24,7 @@ div.paso div.bloque {display:inline-table;}
 div.paso .passepartout {padding:4px;background-color:#fff;border:1px #dddddd solid;border-radius:9px;}
 div.paso img.media-object {border-radius:9px;max-width:50vw;}
 div.paso a.mapa {white-space:nowrap;float:right;}
+div.paso button.unicaopcion {border:0;opacity:1;cursor:auto;}
 
 div#paso3 td {border:0;}
 

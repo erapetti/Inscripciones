@@ -5,7 +5,24 @@ function mensaje(t) {
     $('#mensaje').html(t);
     $('#mensaje').show();
   }
-}
+};
+
+// inicialización de los dropdown-menu
+function btnInit(btn) {
+  var campo = btn.attr('dd');
+  var val = $('#dd-'+campo).val();
+  var opciones = $("ul.dropdown-menu[dd="+campo+"] li a").length;
+  if (typeof val !== 'undefined' && val!=="") {
+    var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").text();
+    // actualizo etiqueta del botón
+    $('#btn-dd-'+campo).html( texto + (opciones>1 ? ' <span class="caret"></span>' : ''));
+  }
+  if (opciones>1) {
+    $('#btn-dd-'+campo).removeClass('disabled unicaopcion');
+  } else {
+    $('#btn-dd-'+campo).addClass('disabled unicaopcion');
+  }
+};
 
 // document ready
 $(document).ready(function() {
@@ -13,13 +30,7 @@ $(document).ready(function() {
 
   // inicialización de los dropdown-menu
   $("ul.dropdown-menu").each(function(index,obj){
-    var campo = $(this).attr('dd');
-    var val = $('#dd-'+campo).val();
-    if (typeof val !== 'undefined' && val!=="") {
-      var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").text();
-      // actualizo etiqueta del botón
-      $('#btn-dd-'+campo).html( texto + ' <span class="caret"></span>');
-    }
+    btnInit($(this));
   });
   // función para actualizar los dropdown-menu cuando el usuario selecciona una opción
   $(document).on("click","ul.dropdown-menu li a",function(event) {
@@ -161,14 +172,8 @@ function actualizoLocalidades(){
     if (data.length==1) {
       $('#dd-localidad').val(data[0].LocId);
     }
-    // inicialización del botón, copiado de document.ready
-    var campo = $('#ul-dd-localidad').attr('dd');
-    var val = $('#dd-'+campo).val();
-    if (typeof val !== 'undefined' && val!=="") {
-      var texto = $("ul.dropdown-menu[dd="+campo+"] li a[data='"+val+"']").text();
-      // actualizo etiqueta del botón
-      $('#btn-dd-'+campo).html( texto + ' <span class="caret"></span>');
-    }
+    // reinicialización del botón
+    btnInit($('#ul-dd-localidad'));
   });
 };
 
