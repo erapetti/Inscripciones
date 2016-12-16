@@ -18,6 +18,8 @@ module.exports = {
 					return res.serverError(err);
 			}
 
+			req.session.paises = paises;
+
 			return res.view({paises:paises,sesion:req.session});
 		});
 	},
@@ -81,6 +83,8 @@ module.exports = {
 					req.session.pais = pais;
 					req.session.doccod = doccod;
 					req.session.perdocid = perdocid;
+					req.session.documento = pais!=='UY' || doccod!=='CI' ? pais+'-'+doccod+'-'+perdocid : perdocid.fmtCedula();
+
 					// salvo en la sesión el resto de la información
 					req.session.persona = persona;
 					req.session.inscripciones = inscripciones;
@@ -196,7 +200,9 @@ module.exports = {
 		}
 		req.session.destinoId = destinoId;
 
-		return res.view({destinoId:destinoId,fecha:"",hora:"",liceo:req.session.destino});
+		var mensaje = req.session.message;
+		req.session.message = undefined;
+		return res.view({destinoId:destinoId,fecha:"",hora:"",liceo:req.session.destino,paises:req.session.paises,perdocid_adulto:req.session.perdocid_adulto,telefono_adulto:req.session.telefono_adulto,mensaje:mensaje});
 	},
 
 	paso6: function (req, res) {
@@ -213,7 +219,8 @@ module.exports = {
 				return res.serverError(err);
 			}
 			if (resultado.changedRows < 1) {
-				return res.serverError(new Error("El horario pedido ya no está disponible"));
+				req.session.message = "El horario pedido ya no está disponible";
+				return res.redirect(req.headers.referer);
 			}
 
 			Entrevista.findOne({DependId:req.session.destinoId,FechaHora:fechaHora,Activa:1,Reserva:req.session.reserva.id}).exec(function(err,entrevista){
@@ -221,8 +228,9 @@ module.exports = {
 					return res.serverError(err);
 				}
 
-				if (!entrevista || !entrevista.id) {
-					return res.serverError(new Error("El horario pedido ya no está disponible"));
+				if (resultado.changedRows < 1) {
+					req.session.message = "El horario pedido ya no está disponible";
+					return res.redirect(req.headers.referer);
 				}
 
 				// ya quedó agendada esa fechaHora entonces la salvo en la sesión
@@ -239,6 +247,8 @@ module.exports = {
 						return res.serverError(err);
 					}
 
+					req.session.fechaHoraDelProceso = reserva[0].updatedAt.fecha_toString();
+					req.session.message = undefined;
 					res.redirect("form/comprobante");
 				});
 			});
@@ -247,7 +257,7 @@ module.exports = {
 
 	comprobante: function(req, res) {
 
-		return res.view({fecha:req.session.fechaEntrevista,hora:req.session.horaEntrevista,liceo:req.session.destino});
+		return res.view({fecha:req.session.fechaEntrevista,hora:req.session.horaEntrevista,liceo:req.session.destino,persona:req.session.persona,documento:req.session.documento,fechaHoraDelProceso:req.session.fechaHoraDelProceso});
 	},
 };
 
@@ -260,4 +270,9 @@ Date.prototype.fecha_toString = function() {
 Date.prototype.hora_toString = function() {
         var sprintf = require("sprintf");
         return sprintf("%02d:%02d", this.getHours(),this.getMinutes());
+};
+String.prototype.fmtCedula = function () {
+      return this.replace(/(.)?(...)(...)(.)$/, function(match,millon,mil,unidades,verif) {
+				 return millon+'.'+mil+'.'+unidades+'-'+verif;
+			 });
 };

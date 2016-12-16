@@ -42,6 +42,10 @@ $(document).ready(function() {
    };
    img.src = "/images/"+ obj.attr('data') +".jpg";
   });
+  // en el paso 5 cargo el dropdown de horas
+  if ($('input#Fecha').length>0 && $('input#Fecha').val() !== '') {
+    actualizoHoras();
+  }
 });
 
 
@@ -209,7 +213,7 @@ $("div#paso3 #btn-paso5").click(function(e){
  **  PASO 5
  *************************/
 
-if ($('input#Fecha')) {
+if ($('input#Fecha').length>0) {
   // datepicker:
   $('input#Fecha').datepicker({
       format: "yyyy-mm-dd",
@@ -221,9 +225,9 @@ if ($('input#Fecha')) {
       autoclose: true,
   });
 
-  $('input#Fecha').change(function(){
+  function actualizoHoras() {
     $('#btn-paso6').addClass('disabled');
-    $.getJSON("../entrevista/horasDisponibles?DependId="+$('#DependId').val()+"&Fecha="+$(this).val(), function(data) {
+    $.getJSON("../entrevista/horasDisponibles?DependId="+$('#DependId').val()+"&Fecha="+$('input#Fecha').val(), function(data) {
       $('#ul-dd-hora').html(''); // borro las opciones que tenía
       if (typeof data[0] === 'undefined') {
         $('#btn-dd-hora').html('---');
@@ -238,7 +242,8 @@ if ($('input#Fecha')) {
         mensaje('');
       }
     });
-  });
+  };
+  $('input#Fecha').change(actualizoHoras);
 
   $('input#dd-hora').change(function(){
     if ($(this).val().match(/^[0-9][0-9]:[0-9][0-9]/)) {
