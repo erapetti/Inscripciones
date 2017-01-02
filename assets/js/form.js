@@ -224,9 +224,9 @@ if ($('input#Fecha').length>0) {
   };
   $('input#Fecha').change(actualizoHoras);
 
-  $('input#dd-hora').change(function(){
-    validate_paso5();
-  });
+//  $('input#dd-hora').change(function(){
+//    validate_paso5();
+//  });
 }
 function validate_paso5() {
   $('#perdocid-adulto').removeClass('red');

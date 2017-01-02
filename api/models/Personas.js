@@ -31,12 +31,12 @@ module.exports = {
     [paiscod,doccod,perdocid],
     function(err,result){
       if (err) {
-        return err
+        return callback(err, undefined);
       }
       if (result===null) {
-        return new Error("No se pueden obtener los datos de la persona",undefined);
+        return callback(new Error("No se pueden obtener los datos de la persona"),undefined);
       }
-      callback(undefined, result[0])
+      return callback(undefined, result[0])
     });
   },
 };

@@ -44,7 +44,6 @@ module.exports = {
 		if (!pais.match('^[A-Z][A-Z]$') && !doccod.match('^[A-Z]+$') && !perdocid.match('^[a-zA-Z0-9 -]+$')) {
 			return res.serverError(new Error("documento de alumno inválido"));
 		}
-
 		// obtengo el id del alumno:
 		Personas.buscar(pais,doccod,perdocid,function(err, persona){
 			if (err) {
@@ -55,9 +54,8 @@ module.exports = {
 				return res.view({mensaje:"No se encuentra una persona registrada con el documento dado.<br>Si ingresó correctamente el número de documento debe consultar dónde inscribirse en <a href='http://ces.edu.uy/index.php/reguladora-estudiantil'>el sitio web de CES</a>"});
 			}
 
-			var inicioCurso = new Date("2016-03-01T03:00:00Z");
+			var inicioCurso = new Date("2017-03-01T03:00:00Z");
 			req.session.inicioCurso = inicioCurso;
-
 			Inscripciones.find({PerId:persona.perid,EstadosInscriId:1,FechaInicioCurso:inicioCurso})
 									 .sort('InscripcionId DESC')
 									 .populate('DependId')
@@ -89,7 +87,6 @@ module.exports = {
 					req.session.persona = persona;
 					req.session.inscripciones = inscripciones;
 					req.session.direccion = direccion;
-
 					return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc});
 				});
 			});
