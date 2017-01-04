@@ -25,7 +25,7 @@ module.exports = {
   },
   horasDisponibles: function(dependId,fecha,callback) {
    return this.query(`
-     SELECT TIME(FechaHora) Hora
+     SELECT TIME_FORMAT(FechaHora,'%H:%i') Hora
       FROM entrevista_inscripcion
      WHERE Dependid=?
        AND DATE(FechaHora) = ?

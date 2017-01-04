@@ -149,6 +149,7 @@ module.exports = {
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
 
+		// busco liceos con lugar para el grado pedido
 		Cupos.conLugar(deptoId,locId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,liceos){
 			if (err) {
 				return res.serverError(err);
@@ -168,6 +169,7 @@ module.exports = {
 				return res.view({mensaje:"No hay liceos con cupos disponibles para el curso seleccionado.<br>Más adelante pueden liberarse cupos si otros estudiantes se cambian de liceo."});
 			}
 
+			// inicio una reserva de cupo, aunque todavía no es útil porque no tiene dependencia asociada
 			Reserva.reservar(req.session.persona.perid,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,reserva) {
 				if (err) {
 					return res.serverError(err);

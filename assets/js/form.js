@@ -201,10 +201,12 @@ if ($('input#Fecha').length>0) {
       todayHighlight: true,
       startDate: '2016-12-27',
       autoclose: true,
+      disableTouchKeyboard: true,
+      maxViewMode: 'months',
   });
 
   function actualizoHoras() {
-    $('#btn-paso6').addClass('disabled');
+    //$('#btn-paso6').addClass('disabled');
     $.getJSON("../entrevista/horasDisponibles?DependId="+$('#DependId').val()+"&Fecha="+$('input#Fecha').val(), function(data) {
       $('#ul-dd-hora').html(''); // borro las opciones que tenía
       if (typeof data[0] === 'undefined') {
@@ -231,11 +233,8 @@ if ($('input#Fecha').length>0) {
 function validate_paso5() {
   $('#perdocid-adulto').removeClass('red');
   $('#telefono-adulto').removeClass('red');
-  if (! $('input#dd-hora').val().match(/^[0-9][0-9]:[0-9][0-9]/)) {
-    mensaje("Debe seleccionar una hora para la entrevista");
-    $('input#dd-hora').addClass('red');
-    return 0;
-  }
+  $('input#Fecha').removeClass('red');
+  $('input#dd-hora').removeClass('red');
   if ($('#perdocid-adulto').val() === "") {
     mensaje("Debe ingresar el número de documento del adulto");
     $('#perdocid-adulto').addClass('red');
@@ -246,7 +245,17 @@ function validate_paso5() {
     $('#telefono-adulto').addClass('red');
     return 0;
   }
-  $('#btn-paso6').removeClass('disabled');
+  if (! $('input#Fecha').val().match(/^ *[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] *$/)) {
+    mensaje("Debe seleccionar un día para la entrevista");
+    $('input#Fecha').addClass('red');
+    return 0;
+  }
+  if (! $('input#dd-hora').val().match(/^[0-9][0-9]:[0-9][0-9]/)) {
+    mensaje("Debe seleccionar una hora para la entrevista");
+    $('input#dd-hora').addClass('red');
+    return 0;
+  }
+  //$('#btn-paso6').removeClass('disabled');
   mensaje('');
   return 1;
 };

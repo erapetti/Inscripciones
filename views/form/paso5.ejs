@@ -17,32 +17,31 @@
       <%- partial("adulto.ejs") %>
 
       <div class="panel panel-default">
-        <div class="panel-heading">Fecha y hora de la entrevista: </div>
-        <div class="panel-body">
+        <div class="panel-heading">Fecha y hora de la entrevista:</div>
+        <div class="panel-body form-horizontal">
 
           <input type="hidden" id='DependId' value="<%= destinoId %>">
 
-          <table>
-            <tr><td>
-              <label>Fecha</label>:
-            </td><td>
-              <input type="text" id="Fecha" name="Fecha" data-provide="datepicker-inline" value="<%= fecha %>">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Fecha:</label>
+            <div class="col-sm-2">
+              <input type="text" id="Fecha" name="Fecha" placeholder="Ingrese la fecha" data-provide="datepicker-inline" value="<%= fecha %>">
+            </div>
+          </div>
 
-            </td></tr><tr><td>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Hora:</label>
 
-              <label>Hora</label>:
-            </td><td>
-              <div class="btn-group">
-                <input type="hidden" name="Hora" value="<%= hora %>" id="dd-hora">
-                <button type="button" id="btn-dd-hora" class="btn btn-default dropdown-toggle disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  ---
-                </button>
-                <ul class="dropdown-menu" dd="hora" id="ul-dd-hora">
-                  <!-- se carga por ajax -->
-                </ul>
-              </div>
-            </td></tr>
-          </table>
+            <div class="btn-group col-sm-2">
+              <input type="hidden" name="Hora" value="<%= hora %>" id="dd-hora">
+              <button type="button" id="btn-dd-hora" class="btn btn-default dropdown-toggle disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                ---
+              </button>
+              <ul class="dropdown-menu" dd="hora" id="ul-dd-hora">
+                <!-- se carga por ajax -->
+              </ul>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -53,7 +52,7 @@
       </script>
 
       <button type="submit" class="btn btn-primary" id="btn-back" name="paso4"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
-      <button type="submit" class="btn btn-primary disabled" id="btn-paso6">Agendar entrevista <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+      <button type="submit" class="btn btn-primary" id="btn-paso6">Agendar entrevista <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
 
     </form>
   </div>

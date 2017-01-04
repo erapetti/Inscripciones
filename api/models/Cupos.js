@@ -43,6 +43,18 @@ module.exports = {
           AND i.OpcionId=c.OpcionId
           AND i.FechaInicioCurso=c.FechaInicioCurso
           AND EstadosInscriId<5
+      ) - (
+        SELECT count(*) reservas
+        FROM reserva_inscripcion r
+        WHERE r.DependId=c.DependId
+          AND r.PlanId=c.PlanId
+          AND (r.TurnoId is null or r.TurnoId<>'N')
+          AND r.CicloId=c.CicloId
+          AND r.GradoId=c.GradoId
+          AND r.OrientacionId=c.OrientacionId
+          AND r.OpcionId=c.OpcionId
+          AND r.FechaInicioCurso=c.FechaInicioCurso
+          AND r.Vencimiento>now()
       ) saldo,
       concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion,
       group_concat(transportes ORDER BY transportes SEPARATOR ', ') transportes
