@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <% if (sails.config.environment != 'development') { %><base href="/node/pases"><% } %>
     <title>Inscripciones y Pases</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -38,7 +39,7 @@
       </ul>
     </div>
     <!--TEMPLATES-->
-    
+
     <!--TEMPLATES END-->
     <!--SCRIPTS-->
     <script src="/js/dependencies/0_jquery/jquery.min.js"></script>
