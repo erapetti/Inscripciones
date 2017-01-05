@@ -19,7 +19,7 @@ module.exports = {
             type: 'integer',
             primaryKey: true
           },
-          EstadosInscriId: 'integer',
+          EstadosInscriId: { model: 'EstadosInscri' },
           DependId: { model: 'Dependencias' },
           PerId: {
             type: 'integer',

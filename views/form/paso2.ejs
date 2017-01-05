@@ -56,6 +56,7 @@
                       <input type="hidden" name="opcionId" value="<%= inscripcion.OpcionId.OpcionId %>">
                       <li class="list-group-item"><b>Turno:</b> <%= turnosDesc[inscripcion.InscriTurno] %></li>
                       <input type="hidden" name="turnoId" value="<%= inscripcion.InscriTurno %>">
+                      <li class="list-group-item"><b>Estado de la inscripción:</b> <%= inscripcion.EstadosInscriId.EstadosInscriDesc %></li>
                     </ul>
                   <% } %>
                 <% }) %>
@@ -87,7 +88,15 @@
       <% } %>
 
       <button type="submit" class="btn btn-primary" id="btn-back" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+      <% if (inscripciones[0].EstadosInscriId.EstadosInscriId != 1 && inscripciones[0].EstadosInscriId.EstadosInscriId != 4) {
+           mensaje = "No puede solicitar pase hasta que la Oficina Reguladora asigne un liceo destino.";
+         } else if (inscripciones[0].CicloId.CicloId != 1 && inscripciones[0].GradoId.GradoId != 4) {
+           mensaje = "Si desea solicitar pase debe hacerlo en su liceo actual";
+         } else {
+           mensaje = "";
+      -%>
       <button type="submit" class="btn btn-primary" id="btn-paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+      <% } %>
     </form>
 
     <% } %>

@@ -65,6 +65,7 @@ module.exports = {
 									 .populate('GradoId')
 									 .populate('OrientacionId')
 									 .populate('OpcionId')
+									 .populate('EstadosInscriId')
 									 .exec(function(err,inscripciones) {
 				if (err) {
 					return res.serverError(err);
@@ -105,7 +106,6 @@ module.exports = {
 							if (err) {
 								return res.serverError(err);
 							}
-
 							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:reserva,entrevista:entrevista});
 						});
 					});
