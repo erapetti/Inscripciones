@@ -33,7 +33,7 @@ module.exports = {
 
   log: {
   //   level: "silent"
-    level: "error"
+    level: "info"
   },
 
   baseurl: 'http://servicios.ces.edu.uy/inscripciones/',
