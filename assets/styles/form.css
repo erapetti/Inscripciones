@@ -1,16 +1,16 @@
 @font-face {font-family: "JaapokkiRegular";
-    src: url("/styles/fonts/JaapokkiRegular.eot");
-    src: url("/styles/fonts/JaapokkiRegular_ot.eot") format("embedded-opentype"),
-    url("/styles/fonts/JaapokkiRegular.woff2") format("woff2"),
-    url("/styles/fonts/JaapokkiRegular.woff") format("woff"),
-    url("/styles/fonts/JaapokkiRegular.ttf") format("truetype"),
-    url("/styles/fonts/JaapokkiRegular.svg") format("svg");
+    src: url("../styles/fonts/JaapokkiRegular.eot");
+    src: url("../styles/fonts/JaapokkiRegular_ot.eot") format("embedded-opentype"),
+    url("../styles/fonts/JaapokkiRegular.woff2") format("woff2"),
+    url("../styles/fonts/JaapokkiRegular.woff") format("woff"),
+    url("../styles/fonts/JaapokkiRegular.ttf") format("truetype"),
+    url("../styles/fonts/JaapokkiRegular.svg") format("svg");
 }
 @font-face {
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(/styles/fonts/LatoRegular.ttf) format('truetype');
+  src: local('Lato Regular'), local('Lato-Regular'), url(../styles/fonts/LatoRegular.ttf) format('truetype');
 }
 body {font-family: Lato;font-size: 12pt;overflow-y: visible;}
 
