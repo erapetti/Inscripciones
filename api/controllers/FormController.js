@@ -54,9 +54,10 @@ module.exports = {
 				return res.view({mensaje:"No se encuentra una persona registrada con el documento dado.<br>Si ingresó correctamente el número de documento debe consultar dónde inscribirse en <a href='http://ces.edu.uy/index.php/reguladora-estudiantil'>el sitio web de CES</a>"});
 			}
 
-			var inicioCurso = new Date("2017-03-01T03:00:00Z");
+			var inicioCurso = "2017-03-01T03:00:00Z";
 			req.session.inicioCurso = inicioCurso;
-			Inscripciones.find({PerId:persona.perid,EstadosInscriId:1,FechaInicioCurso:inicioCurso})
+			Inscripciones.find({PerId:persona.perId,EstadosInscriId:{'<':5},FechaInicioCurso:inicioCurso})
+									 .sort('EstadosInscriId')
 									 .sort('InscripcionId DESC')
 									 .populate('DependId')
 									 .populate('PlanId')
@@ -68,6 +69,7 @@ module.exports = {
 				if (err) {
 					return res.serverError(err);
 				}
+
 				if (typeof inscripciones === 'undefined' || typeof inscripciones[0] === 'undefined') {
 					console.log("no hay inscripcion");
 					return res.view({mensaje:"No se encuentra una inscripción registrada para el documento dado"});
@@ -87,7 +89,26 @@ module.exports = {
 					req.session.persona = persona;
 					req.session.inscripciones = inscripciones;
 					req.session.direccion = direccion;
-					return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc});
+
+					Reserva.findOne({PerId:persona.perId,Vencimiento:{'>=':new Date().fecha_ymd_toString()},DependId:{'>':0}})
+								 .populate('DependId')
+								 .exec(function(err,reserva){
+						if (err) {
+							return res.serverError(err);
+						}
+
+						if (typeof reserva === 'undefined') {
+							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:null,entrevista:null});
+						}
+
+						Entrevista.findOne({Reserva:reserva.id,Activa:1}).exec(function(err,entrevista){
+							if (err) {
+								return res.serverError(err);
+							}
+
+							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:reserva,entrevista:entrevista});
+						});
+					});
 				});
 			});
 		});
@@ -145,7 +166,7 @@ module.exports = {
 		var turnoId = 'D'; // por ahora sólo tenemos turno diurno
 		var inicioCurso = new Date(req.session.inicioCurso);
 
-		if (!deptoId || !locId || !planId || !cicloId || !gradoId || !orientacionId || !opcionId || !turnoId || !inicioCurso || typeof req.session.persona.perid === 'undefined') {
+		if (!deptoId || !locId || !planId || !cicloId || !gradoId || !orientacionId || !opcionId || !turnoId || !inicioCurso || typeof req.session.persona.perId === 'undefined') {
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
 
@@ -170,7 +191,7 @@ module.exports = {
 			}
 
 			// inicio una reserva de cupo, aunque todavía no es útil porque no tiene dependencia asociada
-			Reserva.reservar(req.session.persona.perid,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,reserva) {
+			Reserva.reservar(req.session.persona.perId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,reserva) {
 				if (err) {
 					return res.serverError(err);
 				}
@@ -222,34 +243,23 @@ module.exports = {
 				return res.redirect(req.headers.referer);
 			}
 
-			Entrevista.findOne({DependId:req.session.destinoId,FechaHora:fechaHora,Activa:1,Reserva:req.session.reserva.id}).exec(function(err,entrevista){
+			// ya quedó agendada esa fechaHora entonces la salvo en la sesión
+			req.session.fechaEntrevista = fechaHora.fecha_toString();
+			req.session.horaEntrevista = fechaHora.hora_toString();
+
+			// el vencimiento de la reserva es a última hora del día
+			fechaHora.setHours(23);
+			fechaHora.setMinutes(59);
+			fechaHora.setSeconds(59);
+
+			Reserva.update({id:req.session.reserva.id},{DependId:req.session.destinoId,Vencimiento:fechaHora}).exec(function(err,reserva){
 				if (err) {
 					return res.serverError(err);
 				}
 
-				if (resultado.changedRows < 1) {
-					req.session.message = "El horario pedido ya no está disponible";
-					return res.redirect(req.headers.referer);
-				}
-
-				// ya quedó agendada esa fechaHora entonces la salvo en la sesión
-				req.session.fechaEntrevista = fechaHora.fecha_toString();
-				req.session.horaEntrevista = fechaHora.hora_toString();
-
-				// el vencimiento de la reserva es a última hora del día
-				fechaHora.setHours(23);
-				fechaHora.setMinutes(59);
-				fechaHora.setSeconds(59);
-
-				Reserva.update({id:req.session.reserva.id},{Entrevista:entrevista.id,DependId:req.session.destinoId,Vencimiento:fechaHora}).exec(function(err,reserva){
-					if (err) {
-						return res.serverError(err);
-					}
-
-					req.session.fechaHoraDelProceso = reserva[0].updatedAt.fecha_toString();
-					req.session.message = undefined;
-					res.redirect("form/comprobante");
-				});
+				req.session.fechaHoraDelProceso = reserva[0].updatedAt.fecha_toString()+' a las '+reserva[0].updatedAt.hora_toString();
+				req.session.message = undefined;
+				res.redirect("form/comprobante");
 			});
 		});
 	},
@@ -264,7 +274,7 @@ module.exports = {
 Date.prototype.fecha_toString = function() {
         var sprintf = require("sprintf");
 				var mes = Array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre');
-        return sprintf("%02d de %s de %d", this.getDate(),mes[this.getMonth()],this.getFullYear());
+        return sprintf("%d de %s de %d", this.getDate(),mes[this.getMonth()],this.getFullYear());
 };
 Date.prototype.hora_toString = function() {
         var sprintf = require("sprintf");

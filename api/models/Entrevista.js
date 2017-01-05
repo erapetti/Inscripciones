@@ -8,10 +8,8 @@
 module.exports = {
 
   connection: 'Estudiantil',
-//  autoCreatedAt: false,
-//  autoUpdatedAt: false,
-//  autoPK: false,
-//  migrate: 'safe',
+  autoPK: false,
+  migrate: 'safe',
   tableName: 'entrevista_inscripcion',
   attributes: {
     id: {
@@ -19,8 +17,8 @@ module.exports = {
       primaryKey: true,
     },
     DependId: { model: 'Dependencias' },
-    FechaHora: 'datetime',
-    Reserva: { model: 'Reserva' },
+    FechaHora: { type: 'datetime', index: true },
+    Reserva: { model: 'Reserva', index: true },
     Activa: 'boolean',
   },
   horasDisponibles: function(dependId,fecha,callback) {
@@ -64,14 +62,33 @@ module.exports = {
   asociarReserva: function(dependId,fechaHora,reservaId,callback) {
     return this.query(`
       UPDATE entrevista_inscripcion
-      SET Reserva=?
-      WHERE DependId=?
-        AND FechaHora=?
-        AND Reserva is null
+      SET Reserva=if(DependId<>? or FechaHora<>? or Activa<>1,null,?)
+      WHERE Reserva=?
+         OR (DependId=?
+             AND FechaHora=?
+             AND Reserva is null
+             AND Activa=1
+            )
+      `,
+      [dependId,fechaHora.fecha_ymdhms_toString(),reservaId,reservaId,dependId,fechaHora.fecha_ymdhms_toString()],
+      function(err,result){
+        if (err) {
+          return callback(err, undefined);
+        }
+        return callback(undefined, (result===null ? undefined : result));
+      }
+    );
+  },
+  liberarReserva: function(entrevistaId,reservaId,callback) {
+    return this.query(`
+      UPDATE entrevista_inscripcion
+      SET Reserva=null
+      WHERE id=?
+        AND Reserva=?
         AND Activa=1
       LIMIT 1;
       `,
-      [reservaId,dependId,fechaHora.fecha_ymdhms_toString()],
+      [entrevistaId,reservaId],
       function(err,result){
         if (err) {
           return callback(err, undefined);

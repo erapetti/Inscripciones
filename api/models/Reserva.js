@@ -8,11 +8,10 @@
 module.exports = {
 
   connection: 'Estudiantil',
-//  autoCreatedAt: false,
-//  autoUpdatedAt: false,
-//  autoPK: false,
-//  migrate: 'safe',
+  autoPK: false,
+  migrate: 'safe',
   tableName: 'reserva_inscripcion',
+  identity: 'Reserva',
   attributes: {
     id: {
       type: 'integer',
@@ -26,9 +25,8 @@ module.exports = {
     OrientacionId: { model: 'Orientaciones' },
     OpcionId: { model: 'Opciones' },
     FechaInicioCurso: 'date',
-    Entrevista: { model: 'Entrevista' },
     Vencimiento: 'datetime',
-    PerId: 'integer',
+    PerId: { type: 'integer', index: true },
   },
 
   reservar:function(perId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,callback) {

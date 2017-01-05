@@ -13,13 +13,13 @@ module.exports = {
   autoPK: false,
   migrate: 'safe',
   attributes: {
-    perid: 'integer',
-    pernombrecompleto: 'string',
+    perId: 'integer',
+    perNombreCompleto: 'string',
   },
 
   buscar: function(paiscod,doccod,perdocid,callback) {
     return this.query(`
-      SELECT perid,pernombrecompleto
+      SELECT perId,perNombreCompleto
       FROM PERSONAS
       JOIN PERSONASDOCUMENTOS
       USING (PerId)

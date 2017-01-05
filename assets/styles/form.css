@@ -32,6 +32,10 @@ div#paso4 #btn-paso4 {float:right;}
 
 div#paso5 #Fecha {margin-bottom:5px;}
 
+div#comprobante div.form-group ul {padding-left:1em;}
+
+p.gris {color:#888;}
+
 div#inicio .t-align_center {text-align: center;}
 div#inicio .t-title_xxl {font-size: 50pt;line-height: 1.1;}
 div#inicio .t184__title {color: #fff;padding: 24px 0px 40px 0px;letter-spacing: 2px;}

@@ -8,10 +8,8 @@
 module.exports = {
 
   connection: 'Estudiantil',
-//  autoCreatedAt: false,
-//  autoUpdatedAt: false,
-//  autoPK: false,
-//  migrate: 'safe',
+  autoPK: false,
+  migrate: 'safe',
   tableName: 'CUPOS',
   attributes: {
     id: {
@@ -57,7 +55,7 @@ module.exports = {
           AND r.Vencimiento>now()
       ) saldo,
       concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion,
-      group_concat(transportes ORDER BY transportes SEPARATOR ', ') transportes
+      group_concat(distinct(transportes) ORDER BY transportes SEPARATOR ', ') transportes
       FROM CUPOS c
       JOIN Direcciones.DEPENDLUGAR
       USING (DependId)
@@ -73,14 +71,14 @@ module.exports = {
       ON LugarDirId=DirId
       LEFT JOIN Direcciones.transportes
       USING (DependId)
-      WHERE DeptoId=?
-        AND LocId=?
-        AND PlanId=?
-        AND CicloId=?
-        AND GradoId=?
-        AND OrientacionId=?
-        AND OpcionId=?
-        AND FechaInicioCurso=?
+      WHERE DeptoId=`+DeptoId+`
+        AND LocId=`+LocId+`
+        AND PlanId=`+PlanId+`
+        AND CicloId=`+CicloId+`
+        AND GradoId=`+GradoId+`
+        AND OrientacionId=`+OrientacionId+`
+        AND OpcionId=`+OpcionId+`
+        AND FechaInicioCurso='`+FechaInicioCurso.fecha_ymd_toString()+`'
         AND l.StatusId=1
         AND d.StatusId=1
       GROUP BY DeptoId,LocId,DependId,DirId

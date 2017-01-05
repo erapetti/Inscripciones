@@ -1,7 +1,7 @@
-<div id="paso6" class="paso">
+<div id="comprobante" class="paso">
   <div id="content">
 
-    <h2>Entrevista para solicitar pase</h2>
+    <h2>Entrevista para confirmar el pase</h2>
 
     <div class="panel panel-default">
       <div class="panel-heading">Liceo seleccionado: </div>
@@ -13,30 +13,32 @@
     </div>
 
     <div class="panel panel-default">
-      <div class="panel-heading">Entrevista en el liceo seleccionado: </div>
-      <div class="panel-body">
-        <p>La entrevista en el nuevo liceo quedó agendada el <%= fechaHoraDelProceso %>.</p>
+      <div class="panel-heading">Entrevista de confirmación de la inscripción en el liceo seleccionado: </div>
+      <div class="panel-body form-horizontal">
+        <p class="gris">La entrevista en el nuevo liceo quedó agendada el día <%= fechaHoraDelProceso %>.</p>
 
-        <table class="table">
-          <tr>
-            <td><label>Fecha</label>:</td>
-            <td><%= fecha %></td>
-          </tr><tr>
-            <td><label>Hora</label>:</td>
-            <td><%= hora %></td>
-          </tr><tr>
-
-            <td><label>Alumno</label>:</td>
-            <td><%= persona.pernombrecompleto %> (<%= documento %>)</td>
-          </tr><tr>
-
-            <td><label>Documentación del alumno</label>:</td>
-            <td>Cédula de identidad y Carné de Salud Adolescente</td>
-          </tr><tr>
-            <td><label>Documentación del adulto</label>:</td>
-            <td>Cédula de identidad</td>
-          </tr>
-        </table>
+        <div class="form-group">
+          <label class="col-sm-4">Fecha de la entrevista:</label>
+          <div class="col-sm-6"><%= fecha %></div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4">Hora de la entrevista:</label>
+          <div class="col-sm-6"><%= hora %></div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4">Alumno:</label>
+          <div class="col-sm-6"><%= persona.perNombreCompleto %> (<%= documento %>)</div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-4">Documentación requerida:</label>
+          <div class="col-sm-6">
+            <ul>
+              <li>Cédula de identidad del alumno</li>
+              <li>Carné de Salud Adolescente</li>
+              <li>Cédula de identidad del adulto</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 

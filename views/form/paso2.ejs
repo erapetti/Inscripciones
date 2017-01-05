@@ -2,7 +2,7 @@
   <div id="content">
 
     <% if (typeof persona !== 'undefined') { %>
-      <h4><%= persona.pernombrecompleto %></h4>
+      <h4><%= persona.perNombreCompleto %></h4>
     <% } %>
 
     <% if (typeof inscripciones !== 'undefined') { %>
@@ -65,6 +65,26 @@
 
         </div>
       </div>
+
+      <% if (reserva) { %>
+      <div class="panel panel-default">
+        <div class="panel-heading">Entrevista pendiente para confirmar solicitud de pase:</div>
+        <div class="panel-body">
+          <p>ATENCIÓN: Hay una entrevista agendada
+             en el liceo <%= reserva.DependId.DependDesc %>
+             para el <%= entrevista.FechaHora.fecha_toString() %>
+             a las <%= entrevista.FechaHora.hora_toString() %>
+           </p>
+           <p>La documentación que debe llevar es:
+             <ul>
+               <li>Cédula de identidad del alumno</li>
+               <li>Carné de Salud Adolescente</li>
+               <li>Cédula de identidad del adulto</li>
+             </ul>
+           </p>
+        </div>
+      </div>
+      <% } %>
 
       <button type="submit" class="btn btn-primary" id="btn-back" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
       <button type="submit" class="btn btn-primary" id="btn-paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>

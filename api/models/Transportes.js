@@ -8,10 +8,7 @@
 module.exports = {
 
   connection: 'Direcciones',
-//  autoCreatedAt: false,
-//  autoUpdatedAt: false,
-//  autoPK: false,
-//  migrate: 'safe',
+  migrate: 'safe',
   tableName: 'transportes',
   attributes: {
           DependId: { model: 'Dependencias' },
