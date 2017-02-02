@@ -94,7 +94,9 @@
            mensaje = "Si desea solicitar pase debe hacerlo en su liceo actual";
          } else if (reserva) {
            mensaje = "";
-         } else {
+      -%>
+      <a class="btn btn-primary" href="comprobante">Ver comprobante de la solicitud <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+      <% } else {
            mensaje = "";
       -%>
       <button type="submit" class="btn btn-primary" id="btn-paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>

@@ -31,16 +31,16 @@ module.exports = {
 		var perdocid = req.param('perdocid') ? req.param('perdocid').replace(/[^0-9a-zA-Z]/g,'').substr(0,15) : req.session.perdocid;
 
 		if (!req.session.perdocid || perdocid!=req.session.perdocid) {
-				// salvo la cantidad de intentos con cédulas diferentes para evitar abusos
-				req.session.intentos += 1;
+			// salvo la cantidad de intentos con cédulas diferentes para evitar abusos
+			req.session.intentos += 1;
 		}
 
 		turnosDesc={'1':'Matutino', '2':'Tarde', '3':'Vespertino', '4':'Nocturno', 'D':'Diurno', 'N':'Nocturno'};
 
 		// valido los parámetros
 		if (!pais || !doccod || !perdocid) {
-				return res.serverError(new Error("parámetros incorrectos"));
-		}
+			return res.serverError(new Error("parámetros incorrectos"));
+	}
 		if (!pais.match('^[A-Z][A-Z]$') && !doccod.match('^[A-Z]+$') && !perdocid.match('^[a-zA-Z0-9 -]+$')) {
 			return res.serverError(new Error("documento de alumno inválido"));
 		}
@@ -91,6 +91,15 @@ module.exports = {
 					req.session.inscripciones = inscripciones;
 					req.session.direccion = direccion;
 
+					// limpio otros campos de la sesión que pueden haber quedado de una corrida anterior
+					req.session.liceos = undefined;
+					req.session.reserva = undefined;
+					req.session.destino = undefined;
+					req.session.destinoId = undefined;
+					req.session.fechaEntrevista = undefined;
+					req.session.horaEntrevista = undefined;
+					req.session.fechaHoraDelProceso = undefined;
+
 					Reserva.findOne({PerId:persona.perId,Vencimiento:{'>=':new Date().fecha_ymd_toString()},DependId:{'>':0}})
 								 .populate('DependId')
 								 .exec(function(err,reserva){
@@ -101,6 +110,8 @@ module.exports = {
 						if (typeof reserva === 'undefined') {
 							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:null,entrevista:null});
 						}
+
+						req.session.reserva = reserva;
 
 						Entrevista.findOne({Reserva:reserva.id,Activa:1}).exec(function(err,entrevista){
 							if (err) {
@@ -231,7 +242,8 @@ module.exports = {
 		var fechaHora = new Date(fecha+" "+hora);
 
 		if (!fecha || !hora || !req.session.destinoId || !req.session.reserva.id) {
-				return res.serverError(new Error("parámetros incorrectos"));
+console.log("fecha: "+fecha+" hora: "+hora+" destinoId: "+req.session.destinoId+" reserva: "+req.session.reserva.id);
+			return res.serverError(new Error("parámetros incorrectos"));
 		}
 
 		Entrevista.asociarReserva(req.session.destinoId,fechaHora,req.session.reserva.id,function(err,resultado){
@@ -266,7 +278,41 @@ module.exports = {
 
 	comprobante: function(req, res) {
 
-		return res.view({fecha:req.session.fechaEntrevista,hora:req.session.horaEntrevista,liceo:req.session.destino,persona:req.session.persona,documento:req.session.documento,fechaHoraDelProceso:req.session.fechaHoraDelProceso});
+		if (!req.session.reserva.id || !req.session.persona || !req.session.documento) {
+			return res.serverError(new Error("parámetros incorrectos"));
+		}
+
+		Reserva.findOne({id:req.session.reserva.id}).exec(function(err,reserva){
+			if (err) {
+				return res.serverError(err);
+			}
+
+			Entrevista.findOne({Reserva:req.session.reserva.id}).populate('DependId').exec(function(err,entrevista){
+				if (err) {
+					return res.serverError(err);
+				}
+
+				Dependencias.direccion(entrevista.DependId.DependId, function(err,direccion){
+					if (err) {
+						return res.serverError(err);
+					}
+
+					liceo = entrevista.DependId;
+					liceo.LugarDireccion = direccion.LugarDireccion;
+					liceo.LocNombre = direccion.LocNombre;
+					liceo.DeptoNombre = direccion.DeptoNombre;
+
+					//return res.view({fecha:req.session.fechaEntrevista,hora:req.session.horaEntrevista,liceo:req.session.destino,persona:req.session.persona,documento:req.session.documento,fechaHoraDelProceso:req.session.fechaHoraDelProceso});
+					return res.view({fecha:entrevista.FechaHora.fecha_toString(),
+							 hora:entrevista.FechaHora.hora_toString(),
+							 liceo:entrevista.DependId,
+							 persona:req.session.persona,
+							 documento:req.session.documento,
+							 fechaHoraDelProceso:reserva.updatedAt.fecha_toString()+' a las '+reserva.updatedAt.hora_toString()
+					});
+				});
+			});
+		});
 	},
 };
 
