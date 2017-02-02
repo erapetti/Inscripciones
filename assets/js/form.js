@@ -53,9 +53,9 @@ $(document).ready(function() {
      obj.attr('src', img.src);
    };
    img.onerror = function() {
-     obj.attr('src', '/images/template.jpg');
+     obj.attr('src', '../images/template.jpg');
    };
-   img.src = "/images/"+ obj.attr('data') +".jpg";
+   img.src = '../images/'+ obj.attr('data') +".jpg";
   });
   // en el paso 5 cargo el dropdown de horas
   if ($('input#Fecha').length>0 && $('input#Fecha').val() !== '') {
