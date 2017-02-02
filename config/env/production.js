@@ -36,6 +36,6 @@ module.exports = {
     level: "info"
   },
 
-  baseurl: 'http://servicios.ces.edu.uy/inscripciones/',
+  baseurl: 'http://servicios.ces.edu.uy/node/pases/',
 
 };
