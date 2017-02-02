@@ -28,7 +28,7 @@ module.exports = {
 
 		var pais = req.param('pais') ? req.param('pais').substr(0,2) : req.session.pais;
 		var doccod = req.param('doccod') ? req.param('doccod').substr(0,3) : req.session.doccod;
-		var perdocid = req.param('perdocid') ? req.param('perdocid').substr(0,15) : req.session.perdocid;
+		var perdocid = req.param('perdocid') ? req.param('perdocid').replace(/[^0-9a-zA-Z]/g,'').substr(0,15) : req.session.perdocid;
 
 		if (!req.session.perdocid || perdocid!=req.session.perdocid) {
 				// salvo la cantidad de intentos con cédulas diferentes para evitar abusos
