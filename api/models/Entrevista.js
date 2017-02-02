@@ -29,6 +29,7 @@ module.exports = {
        AND DATE(FechaHora) = ?
        AND Reserva is null
        AND Activa = 1
+       AND FechaHora > NOW()
      GROUP BY TIME(FechaHora)
      `,
      [dependId,fecha.fecha_ymd_toString()],
