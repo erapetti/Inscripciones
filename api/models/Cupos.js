@@ -27,7 +27,7 @@ module.exports = {
     Grupos: 'integer',
     AlumnosPorGrupo: 'integer',
   },
-  conLugar: function(DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,callback) {
+  conLugar: function(DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,DependIdActual,callback) {
     return this.query(`
       SELECT DependId, DependDesc, DependNom, LocId, LocNombre, DeptoNombre, sum(Grupos) * min(AlumnosPorGrupo) - (
         SELECT count(*) inscriptos
@@ -71,20 +71,21 @@ module.exports = {
       ON LugarDirId=DirId
       LEFT JOIN Direcciones.transportes
       USING (DependId)
-      WHERE DeptoId=`+DeptoId+`
-        AND LocId=`+LocId+`
-        AND PlanId=`+PlanId+`
-        AND CicloId=`+CicloId+`
-        AND GradoId=`+GradoId+`
-        AND OrientacionId=`+OrientacionId+`
-        AND OpcionId=`+OpcionId+`
-        AND FechaInicioCurso='`+FechaInicioCurso.fecha_ymd_toString()+`'
+      WHERE DeptoId=?
+        AND LocId=?
+        AND PlanId=?
+        AND CicloId=?
+        AND GradoId=?
+        AND OrientacionId=?
+        AND OpcionId=?
+        AND FechaInicioCurso=?
+        AND DependId<>?
         AND l.StatusId=1
         AND d.StatusId=1
       GROUP BY DeptoId,LocId,DependId,DirId
       HAVING saldo>0
     `,
-    [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso.fecha_ymd_toString()],
+    [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso.fecha_ymd_toString(),DependIdActual],
     function(err,result){
       if (err) {
         return callback(err, undefined);

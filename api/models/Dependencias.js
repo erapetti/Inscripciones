@@ -26,7 +26,7 @@ module.exports = {
 
   direccion: function(DependId, callback) {
     return this.query(`
-      SELECT DeptoId,DeptoNombre,LugarId,LugarDesc,LocId,LocNombre,concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion
+      SELECT DependId,DeptoId,DeptoNombre,LugarId,LugarDesc,LocId,LocNombre,concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion
       FROM DEPENDENCIAS d
       JOIN DEPENDLUGAR USING (DependId)
       JOIN LUGARES USING (LugarId)

@@ -40,7 +40,7 @@ module.exports = {
 		// valido los parámetros
 		if (!pais || !doccod || !perdocid) {
 			return res.serverError(new Error("parámetros incorrectos"));
-	}
+		}
 		if (!pais.match('^[A-Z][A-Z]$') && !doccod.match('^[A-Z]+$') && !perdocid.match('^[a-zA-Z0-9 -]+$')) {
 			return res.serverError(new Error("documento de alumno inválido"));
 		}
@@ -72,7 +72,7 @@ module.exports = {
 				}
 
 				if (typeof inscripciones === 'undefined' || typeof inscripciones[0] === 'undefined') {
-					console.log("no hay inscripcion");
+					console.log("no hay inscripcion para "+perdocid);
 					return res.view({mensaje:"No se encuentra una inscripción registrada para el documento dado"});
 				}
 				Dependencias.direccion(inscripciones[0].DependId.DependId, function(err, direccion) {
@@ -159,10 +159,10 @@ module.exports = {
 		req.session.opcionId = req.session.opcionId || req.session.inscripciones[0].OpcionId.OpcionId;
 
 		return res.view({deptoId:deptoId,locId:locId,
-										 planes:planes,ciclos:ciclos,grados:grados,orientaciones:orientaciones,opciones:opciones,
-										 planId:req.session.planId,cicloId:req.session.cicloId,gradoId:req.session.gradoId,
-									   orientacionId:req.session.orientacionId,opcionId:req.session.opcionId
-									 });
+		                 planes:planes,ciclos:ciclos,grados:grados,orientaciones:orientaciones,opciones:opciones,
+		                 planId:req.session.planId,cicloId:req.session.cicloId,gradoId:req.session.gradoId,
+		                 orientacionId:req.session.orientacionId,opcionId:req.session.opcionId
+		});
 	},
 
 	paso4: function (req, res) {
@@ -177,12 +177,12 @@ module.exports = {
 		var turnoId = 'D'; // por ahora sólo tenemos turno diurno
 		var inicioCurso = new Date(req.session.inicioCurso);
 
-		if (!deptoId || !locId || !planId || !cicloId || !gradoId || !orientacionId || !opcionId || !turnoId || !inicioCurso || typeof req.session.persona.perId === 'undefined') {
+		if (!deptoId || !locId || !planId || !cicloId || !gradoId || !orientacionId || !opcionId || !turnoId || !inicioCurso || typeof req.session.persona.perId === 'undefined' || !req.session.direccion.DependId) {
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
 
 		// busco liceos con lugar para el grado pedido
-		Cupos.conLugar(deptoId,locId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,function(err,liceos){
+		Cupos.conLugar(deptoId,locId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,req.session.direccion.DependId,function(err,liceos){
 			if (err) {
 				return res.serverError(err);
 			}
@@ -233,6 +233,7 @@ module.exports = {
 
 		var mensaje = req.session.message;
 		req.session.message = undefined;
+
 		return res.view({destinoId:destinoId,fecha:"",hora:"",liceo:req.session.destino,paises:req.session.paises,perdocid_adulto:req.session.perdocid_adulto,telefono_adulto:req.session.telefono_adulto,mensaje:mensaje});
 	},
 
@@ -242,7 +243,6 @@ module.exports = {
 		var fechaHora = new Date(fecha+" "+hora);
 
 		if (!fecha || !hora || !req.session.destinoId || !req.session.reserva.id) {
-console.log("fecha: "+fecha+" hora: "+hora+" destinoId: "+req.session.destinoId+" reserva: "+req.session.reserva.id);
 			return res.serverError(new Error("parámetros incorrectos"));
 		}
 
