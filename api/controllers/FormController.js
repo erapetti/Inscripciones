@@ -259,7 +259,7 @@ module.exports = {
 
 				req.session.fechaHoraDelProceso = reserva[0].updatedAt.fecha_toString()+' a las '+reserva[0].updatedAt.hora_toString();
 				req.session.message = undefined;
-				res.redirect("form/comprobante");
+				res.redirect(sails.config.baseurl + "form/comprobante");
 			});
 		});
 	},
