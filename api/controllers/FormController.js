@@ -230,7 +230,7 @@ module.exports = {
 		var hora = req.param('Hora');
 		var fechaHora = new Date(fecha+" "+hora);
 
-		if (!fecha || !hora || !req.session.destino) {
+		if (!fecha || !hora || !req.session.destinoId || !req.session.reserva.id) {
 				return res.serverError(new Error("parámetros incorrectos"));
 		}
 

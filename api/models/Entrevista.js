@@ -60,6 +60,9 @@ module.exports = {
       }
     );
   },
+  // asocia una reserva existente con una entrevista en el liceo. Si esa reserva ya tenía entrevista
+  // entonces la libera (en ese caso modifica dos registros: la entrevista nueva y la vieja) ya que
+  // cada reserva puede tener sólo una entrevista
   asociarReserva: function(dependId,fechaHora,reservaId,callback) {
     return this.query(`
       UPDATE entrevista_inscripcion
