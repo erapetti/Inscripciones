@@ -92,6 +92,8 @@
            mensaje = "No puede solicitar pase hasta que la Oficina Reguladora asigne un liceo destino.";
          } else if (inscripciones[0].CicloId.CicloId != 1 && inscripciones[0].GradoId.GradoId != 4) {
            mensaje = "Si desea solicitar pase debe hacerlo en su liceo actual";
+         } else if (reserva) {
+           mensaje = "";
          } else {
            mensaje = "";
       -%>
