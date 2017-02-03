@@ -243,7 +243,7 @@ module.exports = {
 		var fechaHora = new Date(fecha+" "+hora);
 
 		if (!fecha || !hora || !req.session.destinoId || !req.session.reserva.id) {
-			return res.serverError(new Error("parámetros incorrectos"));
+			return res.serverError(new Error("parámetros incorrectos cedula:"+req.session.perdocid+" destino:"+req.session.destinoId+" reserva:"+req.session.reserva.id));
 		}
 
 		Entrevista.asociarReserva(req.session.destinoId,fechaHora,req.session.reserva.id,function(err,resultado){
