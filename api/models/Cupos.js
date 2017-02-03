@@ -53,9 +53,9 @@ module.exports = {
           AND r.OpcionId=c.OpcionId
           AND r.FechaInicioCurso=c.FechaInicioCurso
           AND r.Vencimiento>now()
-      ) saldo,
+      ) - 50 saldo,
       concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion,
-      group_concat(distinct(transportes) ORDER BY transportes SEPARATOR ', ') transportes
+      transportes
       FROM CUPOS c
       JOIN Direcciones.DEPENDLUGAR
       USING (DependId)
@@ -69,7 +69,7 @@ module.exports = {
       USING (DeptoId)
       JOIN Direcciones.DIRECCIONES
       ON LugarDirId=DirId
-      LEFT JOIN Direcciones.transportes
+      LEFT JOIN (select DependId,group_concat(distinct(transportes) ORDER BY transportes SEPARATOR ', ') transportes from Direcciones.transportes group by DependId) t
       USING (DependId)
       WHERE DeptoId=?
         AND LocId=?
