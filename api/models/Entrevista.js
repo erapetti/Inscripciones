@@ -66,7 +66,7 @@ module.exports = {
   asociarReserva: function(dependId,fechaHora,reservaId,callback) {
     return this.query(`
       UPDATE entrevista_inscripcion
-      SET Reserva=if(DependId<>? or FechaHora<>? or Activa<>1,null,?)
+      SET Reserva=if(DependId<>? or FechaHora<>? or Activa<>1,null,?), updatedAt=NOW()
       WHERE Reserva=?
          OR (DependId=?
              AND FechaHora=?
@@ -86,7 +86,7 @@ module.exports = {
   liberarReserva: function(entrevistaId,reservaId,callback) {
     return this.query(`
       UPDATE entrevista_inscripcion
-      SET Reserva=null
+      SET Reserva=null, updatedAt=NOW()
       WHERE id=?
         AND Reserva=?
         AND Activa=1
