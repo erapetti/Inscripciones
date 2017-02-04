@@ -29,6 +29,13 @@
           <label class="col-sm-4">Alumno:</label>
           <div class="col-sm-6"><%= persona.perNombreCompleto %> (<%= documento %>)</div>
         </div>
+        <% if (typeof adulto !== 'undefined') { -%>
+        <div class="form-group">
+          <label class="col-sm-4">Adulto:</label>
+          <div class="col-sm-6">Documento: <%= adulto.documento %>
+            <br/>Teléfono: <%= adulto.telefono %></div>
+        </div>
+        <% } -%>
         <div class="form-group">
           <label class="col-sm-4">Documentación requerida:</label>
           <div class="col-sm-6">

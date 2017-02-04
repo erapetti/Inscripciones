@@ -27,6 +27,7 @@ module.exports = {
     FechaInicioCurso: 'date',
     Vencimiento: 'datetime',
     PerId: { type: 'integer', index: true },
+    Adulto: 'json',
   },
 
   reservar:function(perId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,callback) {

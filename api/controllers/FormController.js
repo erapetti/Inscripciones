@@ -96,9 +96,6 @@ module.exports = {
 					req.session.reserva = undefined;
 					req.session.destino = undefined;
 					req.session.destinoId = undefined;
-					req.session.fechaEntrevista = undefined;
-					req.session.horaEntrevista = undefined;
-					req.session.fechaHoraDelProceso = undefined;
 
 					Reserva.findOne({PerId:persona.perId,Vencimiento:{'>=':new Date().fecha_ymd_toString()},DependId:{'>':0}})
 								 .populate('DependId')
@@ -207,6 +204,10 @@ module.exports = {
 					return res.serverError(err);
 				}
 
+				if (!reserva || !reserva.id) {
+					console.log("reserva vacía: cédula:"+req.session.perdocid+" reserva:"+reserva.id);
+				}
+
 				req.session.reserva = reserva;
 
 				return res.view({liceos:liceos});
@@ -234,17 +235,25 @@ module.exports = {
 		var mensaje = req.session.message;
 		req.session.message = undefined;
 
-		return res.view({destinoId:destinoId,fecha:"",hora:"",liceo:req.session.destino,paises:req.session.paises,perdocid_adulto:req.session.perdocid_adulto,telefono_adulto:req.session.telefono_adulto,mensaje:mensaje});
+		return res.view({destinoId:destinoId,fecha:"",hora:"",liceo:req.session.destino,paises:req.session.paises,adulto:req.session.adulto,mensaje:mensaje});
 	},
 
 	paso6: function (req, res) {
+		var pais_adulto = req.param('pais-adulto') ? req.param('pais-adulto').substr(0,2) : (typeof req.session.adulto !== 'undefined' ? req.session.adulto.pais : undefined);
+		var doccod_adulto = req.param('doccod-adulto') ? req.param('doccod-adulto').substr(0,3) : (typeof req.session.adulto !== 'undefined' ? req.session.adulto.doccod : undefined);
+		var perdocid_adulto = req.param('perdocid-adulto') ? req.param('perdocid-adulto').replace(/[^0-9a-zA-Z]/g,'').substr(0,15) : (typeof req.session.adulto !== 'undefined' ? req.session.adulto.perdocid : undefined);
+		var telefono_adulto = req.param('telefono-adulto') ? req.param('telefono-adulto').substr(0,20) : (typeof req.session.adulto !== 'undefined' ? req.session.adulto.telefono : undefined);;
+
 		var fecha = req.param('Fecha');
 		var hora = req.param('Hora');
 		var fechaHora = new Date(fecha+" "+hora);
 
 		if (!fecha || !hora || !req.session.destinoId || !req.session.reserva.id) {
-			return res.serverError(new Error("parámetros incorrectos cedula:"+req.session.perdocid+" destino:"+req.session.destinoId+" reserva:"+req.session.reserva.id));
+			console.log("parámetros incorrectos cédula:"+req.session.perdocid+" destino:"+req.session.destinoId+" reserva:"+req.session.reserva.id);
+			return res.serverError(new Error("parámetros incorrectos"));
 		}
+
+		req.session.adulto = { pais:pais_adulto, doccod:doccod_adulto, perdocid:perdocid_adulto, telefono:telefono_adulto };
 
 		Entrevista.asociarReserva(req.session.destinoId,fechaHora,req.session.reserva.id,function(err,resultado){
 			if (err) {
@@ -255,21 +264,16 @@ module.exports = {
 				return res.redirect(req.headers.referer);
 			}
 
-			// ya quedó agendada esa fechaHora entonces la salvo en la sesión
-			req.session.fechaEntrevista = fechaHora.fecha_toString();
-			req.session.horaEntrevista = fechaHora.hora_toString();
-
 			// el vencimiento de la reserva es a última hora del día
 			fechaHora.setHours(23);
 			fechaHora.setMinutes(59);
 			fechaHora.setSeconds(59);
 
-			Reserva.update({id:req.session.reserva.id},{DependId:req.session.destinoId,Vencimiento:fechaHora}).exec(function(err,reserva){
+			Reserva.update({id:req.session.reserva.id},{DependId:req.session.destinoId,Vencimiento:fechaHora,Adulto:req.session.adulto}).exec(function(err,reserva){
 				if (err) {
 					return res.serverError(err);
 				}
 
-				req.session.fechaHoraDelProceso = reserva[0].updatedAt.fecha_toString()+' a las '+reserva[0].updatedAt.hora_toString();
 				req.session.message = undefined;
 				res.redirect(sails.config.baseurl + "form/comprobante");
 			});
@@ -302,12 +306,20 @@ module.exports = {
 					liceo.LocNombre = direccion.LocNombre;
 					liceo.DeptoNombre = direccion.DeptoNombre;
 
-					//return res.view({fecha:req.session.fechaEntrevista,hora:req.session.horaEntrevista,liceo:req.session.destino,persona:req.session.persona,documento:req.session.documento,fechaHoraDelProceso:req.session.fechaHoraDelProceso});
+					if (typeof reserva.Adulto !== 'undefined') {
+						if (reserva.Adulto) {
+							reserva.Adulto.documento = reserva.Adulto.pais!=='UY' || reserva.Adulto.doccod!=='CI' ? reserva.Adulto.pais+'-'+reserva.Adulto.doccod+'-'+reserva.Adulto.perdocid : reserva.Adulto.perdocid.fmtCedula();
+						} else {
+							reserva.Adulto = undefined; // puede venir con null y prefiero manejarlo como undefined
+						}
+					}
+
 					return res.view({fecha:entrevista.FechaHora.fecha_toString(),
 							 hora:entrevista.FechaHora.hora_toString(),
 							 liceo:entrevista.DependId,
 							 persona:req.session.persona,
 							 documento:req.session.documento,
+							 adulto:reserva.Adulto,
 							 fechaHoraDelProceso:reserva.updatedAt.fecha_toString()+' a las '+reserva.updatedAt.hora_toString()
 					});
 				});
