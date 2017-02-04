@@ -82,6 +82,7 @@ module.exports = {
         AND DependId<>?
         AND l.StatusId=1
         AND d.StatusId=1
+        AND LugarId=DependId
       GROUP BY DeptoId,LocId,DependId,DirId
       HAVING saldo>0
     `,
