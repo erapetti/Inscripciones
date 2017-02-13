@@ -53,4 +53,5 @@ module.exports.policies = {
     'paso1': ['intentos'],
     '*': ['sessionAuth','intentos'],
   },
+  wsController: true,
 };
