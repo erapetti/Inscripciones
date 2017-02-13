@@ -24,19 +24,11 @@ module.exports = {
       return res.json({error:101,errstr:"Parámetros incorrectos"});
     }
 
-    var deptoId = Math.floor(dependId / 100);
-    if (!(deptoId>=1 && deptoId<=19)) {
-      return res.json({error:102,errstr:"Dependencia inválida: "+depentId});
-    }
-
-    var locId = 0;
-
-    Cupos.conLugar2(deptoId,locId,dependId,planId,turnoId,cicloId,gradoId,orientacionId,opcionId,fechaInicioCurso,function(err,dependencias){
+    Cupos.conLugar2(dependId,planId,turnoId,cicloId,gradoId,orientacionId,opcionId,fechaInicioCurso,function(err,dependencias){
       if (err) {
         return res.json({err:103,errstr:err.message});
       }
-
-      return res.json({err:0,conLugar:(typeof dependencias !== "undefined" && dependencias[0] && dependencias[0].DependId == dependId)});
+      return res.json({err:0,conLugar:(typeof dependencias[0] !== "undefined" && dependencias[0].saldo > 0)});
     });
   },
 };

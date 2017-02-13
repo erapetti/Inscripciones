@@ -27,6 +27,7 @@ module.exports = {
     Grupos: 'integer',
     AlumnosPorGrupo: 'integer',
   },
+
   conLugar: function(DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,DependIdActual,callback) {
     return this.query(`
       SELECT DependId, DependDesc, DependNom, LocId, LocNombre, DeptoNombre, sum(Grupos) * min(AlumnosPorGrupo) - (
@@ -55,7 +56,7 @@ module.exports = {
           AND r.Vencimiento>now()
       ) - 50 saldo,
       concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion,
-      transportes
+      group_concat(transportes)
       FROM CUPOS c
       JOIN Direcciones.DEPENDLUGAR
       USING (DependId)
@@ -87,6 +88,57 @@ module.exports = {
       HAVING saldo>0
     `,
     [DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso.fecha_ymd_toString(),DependIdActual],
+    function(err,result){
+      if (err) {
+        return callback(err, undefined);
+      }
+      if (result===null) {
+        return new Error("No se encuentra el curso pedido",undefined);
+      }
+      return callback(undefined, (result===null ? undefined : result));
+    });
+  },
+
+  conLugar2: function(DependId,PlanId,TurnoId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,callback) {
+    return this.query(`
+      SELECT DependId, sum(Grupos) * min(AlumnosPorGrupo) - (
+        SELECT count(*) inscriptos
+        FROM INSCRIPCIONES i
+        WHERE i.DependId=c.DependId
+          AND i.PlanId=c.PlanId
+          AND (InscriTurno is null or InscriTurno<>'N')
+          AND i.CicloId=c.CicloId
+          AND i.GradoId=c.GradoId
+          AND i.OrientacionId=c.OrientacionId
+          AND i.OpcionId=c.OpcionId
+          AND i.FechaInicioCurso=c.FechaInicioCurso
+          AND EstadosInscriId<5
+      ) - (
+        SELECT count(*) reservas
+        FROM reserva_inscripcion r
+        WHERE r.DependId=c.DependId
+          AND r.PlanId=c.PlanId
+          AND (r.TurnoId is null or r.TurnoId<>'N')
+          AND r.CicloId=c.CicloId
+          AND r.GradoId=c.GradoId
+          AND r.OrientacionId=c.OrientacionId
+          AND r.OpcionId=c.OpcionId
+          AND r.FechaInicioCurso=c.FechaInicioCurso
+          AND r.Vencimiento>now()
+      ) - 50 saldo
+      FROM CUPOS c
+      WHERE DependId=?
+        AND PlanId=?
+        AND ((?='D' AND TurnoId<>'N') OR (?<>'D' AND TurnoId=?))
+        AND CicloId=?
+        AND GradoId=?
+        AND OrientacionId=?
+        AND OpcionId=?
+        AND FechaInicioCurso=?
+      GROUP BY DependId
+      HAVING saldo>0
+    `,
+    [DependId,PlanId,TurnoId,TurnoId,TurnoId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso.fecha_ymd_toString()],
     function(err,result){
       if (err) {
         return callback(err, undefined);
