@@ -54,7 +54,7 @@ module.exports = {
 				return res.view({mensaje:"No se encuentra una persona registrada con el documento dado.<br>Si ingresó correctamente el número de documento debe consultar dónde inscribirse en <a href='http://ces.edu.uy/index.php/reguladora-estudiantil'>el sitio web de CES</a>"});
 			}
 
-			var inicioCurso = "2017-03-01T03:00:00Z";
+			var inicioCurso = "2018-03-01T03:00:00Z";
 			req.session.inicioCurso = inicioCurso;
 			Inscripciones.find({PerId:persona.perId,EstadosInscriId:{'<':5},FechaInicioCurso:inicioCurso})
 									 .sort('EstadosInscriId')
@@ -103,9 +103,8 @@ module.exports = {
 						if (err) {
 							return res.serverError(err);
 						}
-
 						if (typeof reserva === 'undefined') {
-							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:null,entrevista:null});
+							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:null,entrevista:null,paseshabilitados:sails.config.paseshabilitados});
 						}
 
 						req.session.reserva = reserva;
@@ -114,7 +113,7 @@ module.exports = {
 							if (err) {
 								return res.serverError(err);
 							}
-							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:reserva,entrevista:entrevista});
+							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:reserva,entrevista:entrevista,paseshabilitados:sails.config.paseshabilitados});
 						});
 					});
 				});

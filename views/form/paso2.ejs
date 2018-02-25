@@ -39,7 +39,7 @@
                       <%= direccion.LugarDireccion %>, <%= direccion.LocNombre %>, <%= direccion.DeptoNombre %>
                     </li>
                   </ul>
-                  <p style="text-align:center">Detalle de la inscripción:</p>
+                  <p style="margin-left:16px;padding-top:1em;font-size:18pt;color:#507a78">Detalle de la inscripción:</p>
                   <% inscripciones.forEach(function(inscripcion){ %>
                     <% if (inscripcion.DependId.DependId === liceo.DependId) { %>
 
@@ -87,18 +87,20 @@
       <% } %>
 
       <button type="submit" class="btn btn-primary" id="btn-back" name="paso1"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
-      <% if (inscripciones[0].EstadosInscriId.EstadosInscriId != 1 && inscripciones[0].EstadosInscriId.EstadosInscriId != 4) {
-           mensaje = "No puede solicitar pase hasta que la Oficina Reguladora asigne un liceo destino.";
-         } else if (inscripciones[0].CicloId.CicloId != 1 /* && inscripciones[0].GradoId.GradoId != 4 */) {
-           mensaje = "Si desea solicitar pase debe hacerlo en su liceo actual";
-         } else if (reserva && entrevista) {
-           mensaje = "";
-      -%>
-      <a class="btn btn-primary" href="comprobante">Ver comprobante de la solicitud <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
-      <% } else {
-           mensaje = "";
-      -%>
-      <button type="submit" class="btn btn-primary" id="btn-paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+      <% if (paseshabilitados) { %>
+        <% if (inscripciones[0].EstadosInscriId.EstadosInscriId != 1 && inscripciones[0].EstadosInscriId.EstadosInscriId != 4) {
+             mensaje = "No puede solicitar pase hasta que la Oficina Reguladora asigne un liceo destino.";
+           } else if (inscripciones[0].CicloId.CicloId != 1 /* && inscripciones[0].GradoId.GradoId != 4 */) {
+             mensaje = "Si desea solicitar pase debe hacerlo en su liceo actual";
+           } else if (reserva && entrevista) {
+             mensaje = "";
+        -%>
+        <a class="btn btn-primary" href="comprobante">Ver comprobante de la solicitud <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+        <% } else {
+             mensaje = "";
+        -%>
+        <button type="submit" class="btn btn-primary" id="btn-paso3">Solicitar cambio de liceo <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+        <% } %>
       <% } %>
     </form>
 
