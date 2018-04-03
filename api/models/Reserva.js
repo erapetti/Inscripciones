@@ -58,7 +58,7 @@ module.exports = {
       }
 
       if (reserva.Vencimiento >= vencimiento) {
-        // ya hay una reserva válida
+        // tengo una reserva válida
         return callback(undefined,reserva);
       }
 
