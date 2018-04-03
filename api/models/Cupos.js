@@ -94,6 +94,9 @@ module.exports = {
       if (err) {
         return callback(err, undefined);
       }
+      if (result===null) {
+        return callback(new Error("No se encuentra el curso pedido"),undefined);
+      }
       return callback(undefined, (result===null ? undefined : result));
     });
   },
