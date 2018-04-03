@@ -16,6 +16,7 @@ module.exports = {
     id: {
       type: 'integer',
       primaryKey: true,
+      autoIncrement: true,
     },
     DependId: { model: 'Dependencias' },
     PlanId: { model: 'Planes' },
@@ -30,7 +31,7 @@ module.exports = {
     Adulto: 'json',
   },
 
-  reservar:function(perId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,callback) {
+  reservar: function(perId,planId,cicloId,gradoId,orientacionId,opcionId,inicioCurso,callback) {
     var vencimiento = new Date();
     vencimiento.setHours(vencimiento.getHours()+1);
 
@@ -56,18 +57,54 @@ module.exports = {
       if (err) {
         return callback(err,undefined);
       }
-
+console.log("reservar:");
+console.log(reserva);
       if (reserva.Vencimiento >= vencimiento) {
         // tengo una reserva válida
+console.log("es válida por vencimiento");
         return callback(undefined,reserva);
       }
 
       Reserva.update({id:reserva.id},{Vencimiento:vencimiento},function(err){
         if (err) {
+console.log("da error de update");
           return callback(err,undefined);
         }
+console.log("es válida por update");
         return callback(undefined,reserva);
       });
     });
   },
+
+  quedoInscripto: function(dependId,planId,cicloId,gradoId,orientacionId,opcionId,fechaInicioCurso,perId,callback) {
+    return this.query(`
+      UPDATE reserva_inscripcion
+      SET Vencimiento=NOW()
+      WHERE DependId = ?
+        AND PlanId = ?
+        AND CicloId = ?
+        AND GradoId = ?
+        AND OrientacionId = ?
+        AND OpcionId = ?
+        AND FechaInicioCurso = ?
+        AND PerId = ?
+      `,
+        [dependId,planId,cicloId,gradoId,orientacionId,opcionId,fechaInicioCurso.fecha_ymd_toString(),perId],
+        function(err,result){
+          if (err) {
+            return callback(err, undefined);
+          }
+
+          if (result.affectedRows < 1) {
+            return callback(new Error("No se encuentra la reserva pedida"), undefined);
+          }
+          return callback(undefined, true);
+        });
+      },
+
+};
+
+Date.prototype.fecha_ymd_toString = function() {
+        var sprintf = require("sprintf");
+        return sprintf("%04d-%02d-%02d", this.getFullYear(),this.getMonth()+1,this.getDate());
 };

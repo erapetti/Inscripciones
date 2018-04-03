@@ -26,15 +26,18 @@ module.exports = {
 
   direccion: function(DependId, callback) {
     return this.query(`
-      SELECT DependId,DeptoId,DeptoNombre,LugarId,LugarDesc,LocId,LocNombre,concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion
+      SELECT DependId,DeptoId,DeptoNombre,LugarId,LugarDesc,LocId,LocNombre,concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirKm is null,'',concat(' Km. ',DirKm)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion
       FROM DEPENDENCIAS d
       JOIN DEPENDLUGAR USING (DependId)
-      JOIN LUGARES USING (LugarId)
+      JOIN LUGARES l USING (LugarId)
       JOIN DEPARTAMENTO USING (DeptoId)
       JOIN LOCALIDAD USING (DeptoId,LocId)
       JOIN Direcciones.DIRECCIONES
       ON LugarDirId=DirId
       WHERE DependId = ?
+      AND d.StatusId=1
+      AND l.StatusId=1
+      AND DependLugarStatusId=1
       LIMIT 1
     `,
     [DependId],
@@ -49,4 +52,35 @@ module.exports = {
     });
   },
 
+  liceos: function(DeptoId, LocId, callback) {
+    return this.query(`
+      SELECT DependId,DependDesc,DependNom,DeptoId,DeptoNombre,LugarId,LugarDesc,LocId,LocNombre,concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion
+      FROM DEPENDENCIAS d
+      JOIN DEPENDLUGAR USING (DependId)
+      JOIN LUGARES l USING (LugarId)
+      JOIN DEPARTAMENTO USING (DeptoId)
+      JOIN LOCALIDAD USING (DeptoId,LocId)
+      JOIN Direcciones.DIRECCIONES
+      ON LugarDirId=DirId
+      WHERE DeptoId = ?
+      AND LocId = ?
+      AND DependTipId=2
+      AND DependSubTipId=1
+      AND d.StatusId=1
+      AND l.StatusId=1
+      AND DependLugarStatusId=1
+      AND DependId=LugarId
+      ORDER by DependId
+    `,
+    [DeptoId,LocId],
+    function(err,result){
+      if (err) {
+        return callback(err, undefined);
+      }
+      if (result===null) {
+        return new Error("No se encuentran liceos en el departamento "+DeptoId,undefined);
+      }
+      return callback(undefined, (result===null ? undefined : result));
+    });
+  },
 };

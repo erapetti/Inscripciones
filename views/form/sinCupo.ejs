@@ -1,0 +1,90 @@
+<div id="sinCupo" class="paso">
+  <div id="content">
+
+    <h2>Solicitar nuevo de liceo</h2>
+
+<% if (tipo == 'interior') { -%>
+
+    <p>Debe dirigirse por nota a la inspección regional que le corresponde a la localidad destino.</p>
+    <button type="submit" class="btn btn-primary" id="btn-back" name="paso4"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+
+<% } else if (tipo == 'mvd') { %>
+
+    <p>Debe presentar su solicitud de pase en la Reguladora de Inscripciones de CES (Rincón 712, Montevideo).</p>
+    <button type="submit" class="btn btn-primary" id="btn-back" name="paso4"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+
+<% } else if (tipo == 'mvd-febrero') { %>
+
+    <p>Durante el mes de febrero se reciben solicitudes de cambio de liceo hacia liceos que no tienen cupo disponible.</p>
+    <p>Todas las solicitudes recibidas se analizan en conjunto y el 1º de marzo se realizan los pases que son posibles.</p>
+    <p>Si no se puede conceder el pase a uno de los liceos pedidos entonces el alumno quedará en el liceo actual, donde tiene la inscripción confirmada.</p>
+
+    <form method="post" id="frm-sinCupo" action='sinCupoGuardar'>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Liceos pedidos</div>
+        <div class="panel-body">
+
+          <p>Indique dos liceos donde prefiere ir.</p>
+          <table class="table">
+            <tr><td class="col-sm-2">
+
+              <label>Liceo destino</label>:
+            </td><td>
+              <div class="btn-group">
+                <input type="hidden" name="liceo1" value="<%= typeof liceo1 !== 'undefined' ? liceo1 : '' %>" id="dd-liceo1">
+                <button type="button" id="btn-dd-liceo1" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Seleccione un liceo <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" dd="liceo1" id="ul-dd-liceo1">
+                  <% liceos.forEach(function(liceo) { %>
+                    <li><a href="#" dd="liceo1" data="<%= liceo.DependId %>">
+                      <%= liceo.DependDesc %>
+                      <%= (liceo.DependNom ? '('+liceo.DependNom+')' : '') %>
+                    </a></li>
+                  <% }) %>
+                </ul>
+              </div>
+            </td></tr><tr><td>
+
+              <label>Otro liceo destino</label>:
+            </td><td>
+
+              <div class="btn-group">
+                <input type="hidden" name="liceo2" value="<%= typeof liceo2 !== 'undefined' ? liceo2 : '' %>" id="dd-liceo2">
+                <button type="button" id="btn-dd-liceo2" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Seleccione un liceo <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" dd="liceo2">
+                <% liceos.forEach(function(liceo) { %>
+                  <li><a href="#" dd="liceo2" data="<%= liceo.DependId %>">
+                    <%= liceo.DependDesc %>
+                    <%= (liceo.DependNom ? '('+liceo.DependNom+')' : '') %>
+                  </a></li>
+                <% }) %>
+                </ul>
+              </div>
+
+            </td></tr>
+          </table>
+          <div class="checkbox" style="margin-bottom:2em;margin-top:2em" id="btn-confirma"><label><input type="checkbox" name="confirma" id="confirma"> Entiendo que si esta solicitud es aceptada el liceo de la inscripción será cambiado a uno de los que estoy solicitando por este medio</label></div>
+
+        </div>
+      </div>
+
+      <%- partial("adulto.ejs") %>
+
+      <div class="alert alert-danger" id="mensaje" style="display:none"></div>
+      <script type="text/javascript">
+        textoMensaje='<% if (typeof mensaje !== 'undefined') { %><%= mensaje %><% } %>'
+      </script>
+
+      <button type="submit" class="btn btn-primary" id="btn-back" name="paso4"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+      <button type="submit" class="btn btn-primary" id="btn-sinCupoGuardar">Enviar solicitud <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+
+    </form>
+
+<% } %>
+
+  </div>
+</div>

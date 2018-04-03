@@ -44,7 +44,7 @@
                 </li>
                 <li class="list-group-item">
                   <b>Estadísticas:</b>
-                  <a href="http://www.anep.edu.uy/monitorces/servlet/fichaliceo?L,<%= liceo.DependId %>">Monitor educativo</a>
+                  <a target="_blank" href="http://servicios.ces.edu.uy/monitorces/servlet/fichaliceo?L,<%= liceo.DependId %>">Monitor educativo</a>
                 </li>
                 <% if (liceo.transportes) { %>
                 <li class="list-group-item">
@@ -55,7 +55,7 @@
                 </li>
                 <% } %>
               </ul>
-              <form method="post" class0="form-horizontal" id="frm-paso4" action='paso5'>
+              <form method="post" id="frm-paso4" action='paso5'>
                 <input type="hidden" name="dependId-destino" value="<%= liceo.DependId %>">
                 <button type="submit" class="btn btn-primary" id="btn-paso4">Solicitar entrevista <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
               </form>
@@ -72,5 +72,9 @@
       </script>
 
       <button type="submit" class="btn btn-primary" id="btn-back" name="paso3"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> Atrás</button>
+      <form method="post" id="frm-sinCupo" action='sinCupo' style="display:inline">
+        <button type="submit" class="btn btn-primary" id="btn-sinCupo">Solicitar pase a un liceo sin cupo libre <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+      </form>
+
   </div>
 </div>

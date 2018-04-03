@@ -29,6 +29,8 @@ module.exports = {
   },
 
   conLugar: function(DeptoId,LocId,PlanId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,DependIdActual,callback) {
+    var d = new Date();
+    var oculto = ((d.getMonth()+1) > 3 && (d.getMonth()+1) < 12 ? 0 : (GradoId != 4 ? 10 : 50));
     return this.query(`
       SELECT DependId, DependDesc, DependNom, LocId, LocNombre, DeptoNombre, sum(Grupos) * min(AlumnosPorGrupo) - (
         SELECT count(*) inscriptos
@@ -54,7 +56,7 @@ module.exports = {
           AND r.OpcionId=c.OpcionId
           AND r.FechaInicioCurso=c.FechaInicioCurso
           AND r.Vencimiento>now()
-      ) - 50 saldo,
+      ) - `+oculto+` saldo,
       concat(DirViaNom,if(DirNroPuerta is null,'',concat(' ',DirNroPuerta)),if(DirViaNom1 is null,'',if(DirViaNom2 is null,concat(' esq. ',DirViaNom1),concat(' entre ',DirViaNom1,if(DirViaNom2 like 'i%' or DirViaNom2 like 'hi%',' e ',' y '),DirViaNom2)))) LugarDireccion,
       group_concat(transportes)
       FROM CUPOS c
@@ -92,14 +94,13 @@ module.exports = {
       if (err) {
         return callback(err, undefined);
       }
-      if (result===null) {
-        return new Error("No se encuentra el curso pedido",undefined);
-      }
       return callback(undefined, (result===null ? undefined : result));
     });
   },
 
-  conLugar2: function(DependId,PlanId,TurnoId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,callback) {
+  tieneLugar: function(DependId,PlanId,TurnoId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso,callback) {
+    var d = new Date();
+    var oculto = ((d.getMonth()+1) > 3 && (d.getMonth()+1) < 12 ? 0 : (GradoId != 4 ? 10 : 50));
     return this.query(`
       SELECT DependId, sum(Grupos) * min(AlumnosPorGrupo) - (
         SELECT count(*) inscriptos
@@ -125,7 +126,7 @@ module.exports = {
           AND r.OpcionId=c.OpcionId
           AND r.FechaInicioCurso=c.FechaInicioCurso
           AND r.Vencimiento>now()
-      ) - 50 saldo
+      ) - `+oculto+` saldo
       FROM CUPOS c
       WHERE DependId=?
         AND PlanId=?
@@ -136,17 +137,18 @@ module.exports = {
         AND OpcionId=?
         AND FechaInicioCurso=?
       GROUP BY DependId
-      HAVING saldo>0
     `,
     [DependId,PlanId,TurnoId,TurnoId,TurnoId,CicloId,GradoId,OrientacionId,OpcionId,FechaInicioCurso.fecha_ymd_toString()],
     function(err,result){
       if (err) {
         return callback(err, undefined);
       }
-      if (result===null) {
-        return new Error("No se encuentra el curso pedido",undefined);
+
+      if (typeof result[0] === 'undefined') {
+        return callback(new Error("No se encuentra el curso pedido"),undefined);
       }
-      return callback(undefined, (result===null ? undefined : result));
+
+      return callback(undefined, result[0].saldo > 0);
     });
   },
 };

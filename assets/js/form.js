@@ -4,6 +4,7 @@ function mensaje(t) {
   } else {
     $('#mensaje').html(t);
     $('#mensaje').show();
+    //$("html, body").animate({scrollTop: $('#mensaje').offset().top}, 1000);
   }
 };
 
@@ -99,26 +100,6 @@ $("div#paso1 #btn-paso1").click(function(e){
   }
 });
 
-if (0==1){
-// Identificación del alumno:
-$("#dd-pais a").click(function() {
-  $('#pais').val( $(this).attr('data-value') );
-  $('#lbl-pais').text( $(this).text());
-  // cambio el tipo de documento dependiendo del país seleccionado:
-  if ($('#pais').val() === "UY") {
-    $('#doccod').val("CI");
-    $('#lbl-doccod').text( "Cédula de Identidad" );
-  } else {
-    $('#doccod').val("PSP");
-    $('#lbl-doccod').text( "Pasaporte" );
-  }
-});
-
-$("#dd-doccod a").click(function() {
-  $('#doccod').val( $(this).attr('data-value') );
-  $('#lbl-doccod').text( $(this).text());
-});
-}
 /*************************
  **  PASO 2
  *************************/
@@ -165,10 +146,10 @@ function validate_paso3() {
   });
   if (error) {
     mensaje("Debe ingresar todos los valores solicitados");
-    return 0;
+    return false;
   }
   mensaje('');
-  return 1;
+  return true;
 };
 
 $("div#paso3 #btn-paso4").click(function(e){
@@ -181,8 +162,52 @@ $("div#paso3 #btn-paso4").click(function(e){
  **  PASO 4
  *************************/
 
+function validate_paso4() {
+  return true;
+};
+
 $("div#paso3 #btn-paso5").click(function(e){
  if (!validate_paso4()) {
+   e.preventDefault();
+ }
+});
+
+/*************************
+ **  SIN CUPO
+ *************************/
+
+function validate_sinCupo() {
+  var error = 0;
+  $('input').each(function(index){
+    if ($(this).val() === "") {
+      $('#btn-'+$(this).attr('id')).addClass('red');
+      $('#'+$(this).attr('id')).addClass('red');
+      error = 1;
+    } else {
+      $('#btn-'+$(this).attr('id')).removeClass('red');
+      $('#'+$(this).attr('id')).removeClass('red');
+    }
+  });
+  if (! $('#confirma').prop('checked')) {
+    $('#btn-confirma').addClass('red');
+    error = 1;
+  } else {
+    $('#btn-confirma').removeClass('red');
+  }
+  if (error) {
+    mensaje("Debe ingresar todos los valores solicitados");
+    return false;
+  }
+  if ($('#dd-liceo1').val() === $('#dd-liceo2').val()) {
+    mensaje("Los liceos seleccionados deben ser diferentes");
+    return false;
+  }
+  mensaje('');
+  return true;
+};
+
+$("div#sinCupo #btn-sinCupoGuardar").click(function(e){
+ if (!validate_sinCupo()) {
    e.preventDefault();
  }
 });

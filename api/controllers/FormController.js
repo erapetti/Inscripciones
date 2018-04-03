@@ -103,13 +103,14 @@ module.exports = {
 						if (err) {
 							return res.serverError(err);
 						}
+
 						if (typeof reserva === 'undefined') {
 							return res.view({persona:persona,inscripciones:inscripciones,direccion:direccion,turnosDesc:turnosDesc,reserva:null,entrevista:null,paseshabilitados:sails.config.paseshabilitados});
 						}
 
 						req.session.reserva = reserva;
 
-						Entrevista.findOne({Reserva:reserva.id,Activa:1}).exec(function(err,entrevista){
+						Entrevista.findOne({Reserva:reserva.id,Activa:1,FechaHora:{'>=':new Date().fecha_ymd_toString()}}).exec(function(err,entrevista){
 							if (err) {
 								return res.serverError(err);
 							}
@@ -157,7 +158,8 @@ module.exports = {
 		return res.view({deptoId:deptoId,locId:locId,
 		                 planes:planes,ciclos:ciclos,grados:grados,orientaciones:orientaciones,opciones:opciones,
 		                 planId:req.session.planId,cicloId:req.session.cicloId,gradoId:req.session.gradoId,
-		                 orientacionId:req.session.orientacionId,opcionId:req.session.opcionId
+		                 orientacionId:req.session.orientacionId,opcionId:req.session.opcionId,
+										 mensaje:undefined,
 		});
 	},
 
@@ -209,16 +211,66 @@ module.exports = {
 
 				req.session.reserva = reserva;
 
+				if (req.session.reserva.DependId) {
+					console.log("paso4 con la reserva "+req.session.reserva.id+" que ya tiene entrevista asociada");
+					return res.redirect(sails.config.baseurl);
+				}
+
 				return res.view({liceos:liceos});
 			});
 		});
 	},
+
+	sinCupo: function (req, res) {
+
+		if (!req.session.deptoId) {
+			return res.serverError(new Error("parámetros incorrectos"));
+		}
+		Dependencias.liceos(req.session.deptoId, req.session.locId, function(err,liceos){
+			if (err) {
+				return res.serverError(err);
+			}
+
+			var hoy = new Date();
+			var mesActual = hoy.getMonth()+1;
+			var diaActual = hoy.getDay();
+
+			return res.view({liceos:liceos,paises:req.session.paises,adulto:req.session.adulto,
+				tipo:(req.session.deptoId!=10 ? 'interior' : (mesActual==12 || mesActual==1 || (mesActual==2 && diaActual<24)) ? 'mvd-febrero' : 'mvd'),
+			});
+		});
+	},
+
+// 	sinCupoGuardar: function (req, res) {
+// 		var liceo1 = req.param('liceo1');
+// 		var liceo2 = req.param('liceo2');
+// 		var confirma = req.param('confirma');
+// 		var pais_adulto = req.param('pais-adulto');
+// 		var doccod_adulto = req.param('doccod-adulto');
+// 		var perdocid_adulto = req.param('perdocid-adulto');
+// 		var telefono_adulto = req.param('telefono-adulto');
+//
+// console.log(liceo1);
+// console.log(liceo2);
+// console.log(confirma);
+// console.log(pais_adulto);
+// console.log(doccod_adulto);
+// console.log(perdocid_adulto);
+// console.log(telefono_adulto);
+//
+// 		return res.redirect(sails.config.baseurl + "form/comprobante");
+// 	},
 
 	paso5: function (req, res) {
 		var destinoId = req.param('dependId-destino') ? parseInt(req.param('dependId-destino')) : req.session.destinoId;
 
 		if (!destinoId) {
 				return res.serverError(new Error("parámetros incorrectos"));
+		}
+
+		if (req.session.reserva.DependId) {
+			console.log("paso5 con la reserva "+req.session.reserva.id+" que ya tiene entrevista asociada");
+			return res.redirect(sails.config.baseurl);
 		}
 
 		// valido que el liceo destino haya estado entre los que le ofrecí
@@ -252,6 +304,12 @@ module.exports = {
 			return res.serverError(new Error("parámetros incorrectos"));
 		}
 
+console.log(req.session.reserva);
+		if (req.session.reserva.DependId) {
+			console.log("paso6 con la reserva "+req.session.reserva.id+" que ya tiene entrevista asociada");
+			return res.redirect(sails.config.baseurl);
+		}
+
 		req.session.adulto = { pais:pais_adulto, doccod:doccod_adulto, perdocid:perdocid_adulto, telefono:telefono_adulto };
 
 		Entrevista.asociarReserva(req.session.destinoId,fechaHora,req.session.reserva.id,function(err,resultado){
@@ -273,8 +331,11 @@ module.exports = {
 					return res.serverError(err);
 				}
 
+				req.session.reserva.DependId=req.session.destinoId;
+				req.session.reserva.Vencimiento=fechaHora;
+				req.session.reserva.Adulto=req.session.adulto;
 				req.session.message = undefined;
-				res.redirect(sails.config.baseurl + "form/comprobante");
+				return res.redirect(sails.config.baseurl + "form/comprobante");
 			});
 		});
 	},
@@ -293,6 +354,10 @@ module.exports = {
 			Entrevista.findOne({Reserva:req.session.reserva.id}).populate('DependId').exec(function(err,entrevista){
 				if (err) {
 					return res.serverError(err);
+				}
+
+				if (typeof entrevista === 'undefined') {
+					return res.serverError(new Error("No se encuentra una entrevista fijada para solicitar pase"));
 				}
 
 				Dependencias.direccion(entrevista.DependId.DependId, function(err,direccion){
