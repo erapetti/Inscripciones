@@ -57,20 +57,15 @@ module.exports = {
       if (err) {
         return callback(err,undefined);
       }
-console.log("reservar:");
-console.log(reserva);
       if (reserva.Vencimiento >= vencimiento) {
         // tengo una reserva válida
-console.log("es válida por vencimiento");
         return callback(undefined,reserva);
       }
 
       Reserva.update({id:reserva.id},{Vencimiento:vencimiento},function(err){
         if (err) {
-console.log("da error de update");
           return callback(err,undefined);
         }
-console.log("es válida por update");
         return callback(undefined,reserva);
       });
     });
