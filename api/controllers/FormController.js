@@ -304,7 +304,6 @@ module.exports = {
 			return res.serverError(new Error("parámetros incorrectos"));
 		}
 
-console.log(req.session.reserva);
 		if (req.session.reserva.DependId) {
 			console.log("paso6 con la reserva "+req.session.reserva.id+" que ya tiene entrevista asociada");
 			return res.redirect(sails.config.baseurl);
