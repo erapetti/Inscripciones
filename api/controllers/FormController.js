@@ -54,7 +54,7 @@ module.exports = {
 				return res.view({mensaje:"No se encuentra una persona registrada con el documento dado.<br>Si ingresó correctamente el número de documento debe consultar dónde inscribirse en <a href='http://ces.edu.uy/index.php/reguladora-estudiantil'>el sitio web de CES</a>"});
 			}
 
-			var inicioCurso = "2018-03-01T03:00:00Z";
+			var inicioCurso = sails.config.anioinscripcion + "-03-01T03:00:00Z";
 			req.session.inicioCurso = inicioCurso;
 			Inscripciones.find({PerId:persona.perId,EstadosInscriId:{'<':5},FechaInicioCurso:inicioCurso})
 									 .sort('EstadosInscriId')
