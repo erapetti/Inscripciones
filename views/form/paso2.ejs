@@ -56,7 +56,7 @@
                       <input type="hidden" name="opcionId" value="<%= inscripcion.OpcionId.OpcionId %>">
                       <li class="list-group-item"><b>Turno:</b> <%= turnosDesc[inscripcion.InscriTurno] %></li>
                       <input type="hidden" name="turnoId" value="<%= inscripcion.InscriTurno %>">
-                      <li class="list-group-item"><b>Estado de la inscripción:</b> <%= inscripcion.EstadosInscriId.EstadosInscriDesc %></li>
+                      <li class="list-group-item"><b>Estado de la inscripción:</b> <% if (inscripcion.EstadosInscriId.EstadosInscriDesc === 'Distribuido') { %>Un adulto responsable debe confirmar la inscripción en el liceo<% } else { %><%= inscripcion.EstadosInscriId.EstadosInscriDesc %><% } %></li>
                     </ul>
                   <% } %>
                 <% }) %>
