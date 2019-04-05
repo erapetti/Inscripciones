@@ -57,6 +57,12 @@ module.exports = {
       if (err) {
         return callback(err,undefined);
       }
+
+      if (reserva.Vencimiento.getHours()==23 && reserva.Vencimiento.getMinutes()==59 && reserva.Vencimiento.getSeconds()==59) {
+        // hay una reserva asociada a una entrevista
+        return callback(new Error("Ya está definida una entrevista para el día "+reserva.Vencimiento.getDate()+"/"+reserva.Vencimiento.getMonth()+"/"+reserva.Vencimiento.getFullYear()), undefined);
+      }
+
       if (reserva.Vencimiento >= vencimiento) {
         // tengo una reserva válida
         return callback(undefined,reserva);
