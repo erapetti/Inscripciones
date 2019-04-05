@@ -23,14 +23,14 @@ module.exports = {
   },
   horasDisponibles: function(dependId,fecha,callback) {
    return this.query(`
-     SELECT TIME_FORMAT(FechaHora,'%H:%i') Hora
+     SELECT TIME_FORMAT(TIME(FechaHora),'%H:%i') Hora
       FROM entrevista_inscripcion
      WHERE Dependid=?
        AND DATE(FechaHora) = ?
        AND Reserva is null
        AND Activa = 1
        AND FechaHora > NOW()
-     GROUP BY TIME(FechaHora)
+     GROUP BY TIME_FORMAT(TIME(FechaHora),'%H:%i')
      `,
      [dependId,fecha.fecha_ymd_toString()],
      function(err,result){
