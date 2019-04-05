@@ -43,8 +43,10 @@
                   <a class="mapa" target="_blank" href="https://sig.anep.edu.uy/SIGANEP/Home/Index?OpcionP=1&factor=10&ruee=<%= ruee(liceo.DependId) %>"><span class="glyphicon glyphicon-map-marker"></span> Ver mapa</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Estadísticas:</b>
-                  <a target="_blank" href="http://servicios.ces.edu.uy/monitorces/servlet/fichaliceo?L,<%= liceo.DependId %>">Monitor educativo</a>
+                  <b>Estadísticas del Monitor Educativo:</b><br>
+                  <a target="_blank" href="http://servicios.ces.edu.uy/monitorces/servlet/ainformecb?L,<%= liceo.DependId %>">Ciclo Básico</a>
+                  <br>
+                  <a target="_blank" href="http://servicios.ces.edu.uy/monitorces/servlet/ainformebd?L,<%= liceo.DependId %>">Bachillerato</a>
                 </li>
                 <% if (liceo.transportes) { %>
                 <li class="list-group-item">
