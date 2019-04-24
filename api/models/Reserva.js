@@ -43,6 +43,7 @@ module.exports = {
                     OrientacionId:orientacionId,
                     OpcionId:opcionId,
                     FechaInicioCurso:inicioCurso,
+                    Vencimiento:{'>=':new Date().fecha_ymd_toString()},
     };
     var createObj = {	PerId:perId,
                       PlanId:planId,
